@@ -2826,6 +2826,8 @@ function renderSettings() {
           <button class="btn secondary small" id="export-data">Export JSON</button>
           <button class="btn secondary small" id="import-data">Import JSON</button>
         </div>
+        <button class="btn secondary" id="force-refresh" style="margin-top:12px">↻ Update to latest version</button>
+        <p style="font-size:12px;color:var(--muted);margin-top:4px">Clears the cached app code and reloads. Your saved data is safe.</p>
         <button class="btn danger" id="reset-data" style="margin-top:12px">Reset all data</button>
       </div>
     </div>
@@ -2991,6 +2993,24 @@ function renderSettings() {
     localStorage.removeItem(LS_KEY);
     state = defaultState();
     setView('onboarding');
+  };
+
+  el.querySelector('#force-refresh').onclick = async () => {
+    const btn = el.querySelector('#force-refresh');
+    btn.disabled = true;
+    btn.textContent = 'Refreshing…';
+    try {
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+    } catch (e) { /* ignore — reload anyway */ }
+    // Bypass HTTP cache as well
+    location.reload();
   };
 }
 
