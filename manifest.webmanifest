@@ -1,6 +1,6 @@
 {
-  "name": "Train_",
-  "short_name": "Train_",
+  "name": "Train",
+  "short_name": "Train",
   "description": "CrossFit return tracker",
   "start_url": "./index.html",
   "scope": "./",

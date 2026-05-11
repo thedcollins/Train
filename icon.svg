@@ -7,5 +7,5 @@
     <rect x="372" y="240" width="20" height="32"/>
     <rect x="140" y="248" width="232" height="16" rx="4"/>
   </g>
-  <text x="256" y="408" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="72" fill="#00d26a">TRAIN_</text>
+  <text x="256" y="408" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="72" fill="#00d26a">TRAIN</text>
 </svg>

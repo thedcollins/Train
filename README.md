@@ -1,4 +1,4 @@
-# Train_
+# Train
 
 A personal CrossFit return-to-fitness PWA.
 
