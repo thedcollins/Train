@@ -1,0 +1,19 @@
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor noise
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local notes / scratch
+notes/
+*.local.md
+
+# Backups of exported app data
+*.train-backup.json
+train-data*.json

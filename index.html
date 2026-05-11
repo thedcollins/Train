@@ -1,0 +1,3071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Train_">
+<meta name="theme-color" content="#0e1117">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Train_</title>
+<style>
+  :root {
+    --bg: #0e1117;
+    --panel: #161b22;
+    --panel2: #1f242c;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #00d26a;
+    --accent-dim: #00d26a22;
+    --warn: #f0883e;
+    --danger: #f85149;
+    --safe-top: env(safe-area-inset-top, 0);
+    --safe-bot: env(safe-area-inset-bottom, 0);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+  button, input, select, textarea {
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--text);
+  }
+  button { cursor: pointer; }
+  a { color: var(--accent); }
+
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: calc(12px + var(--safe-top)) 18px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+  header .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  main {
+    padding: 16px 16px calc(80px + var(--safe-bot));
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  nav#bottom {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding-bottom: var(--safe-bot);
+    z-index: 10;
+  }
+  nav#bottom button {
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    padding: 10px 4px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  nav#bottom button.active { color: var(--accent); }
+  nav#bottom .icon { font-size: 20px; }
+
+  h2 { font-size: 18px; margin: 8px 0 12px; }
+  h3 { font-size: 15px; margin: 16px 0 8px; color: var(--accent); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .card .title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .card .body { font-size: 14px; color: var(--text); }
+  .card .body ul { margin: 6px 0; padding-left: 20px; }
+  .card .body li { margin: 2px 0; }
+
+  .btn {
+    background: var(--accent);
+    color: #001b0c;
+    border: 0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn.danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+  }
+  .btn.small { width: auto; padding: 8px 14px; font-size: 13px; margin-top: 0; }
+
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .chip.on {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .chip.danger.on {
+    background: #f8514922;
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+
+  input[type=text], input[type=number], textarea, select {
+    width: 100%;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 4px 0 8px;
+  }
+  textarea { min-height: 60px; resize: vertical; }
+  label { font-size: 13px; color: var(--muted); }
+
+  .group-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin: 14px 0 6px;
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--panel2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    margin-right: 4px;
+  }
+  .pill.warn { color: var(--warn); border-color: var(--warn); }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 16px;
+    font-size: 14px;
+  }
+
+  hr { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  /* Movement reference — full-width, one per row */
+  .mov-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .mov-item {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .mov-item img {
+    width: 100%;
+    height: auto;
+    background: #fff;
+    display: block;
+  }
+  .mov-item.no-image .mov-thumb {
+    aspect-ratio: 16 / 9;
+    background: repeating-linear-gradient(45deg, var(--panel) 0 8px, var(--panel2) 8px 16px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .mov-item .mov-name {
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text);
+    border-top: 1px solid var(--border);
+  }
+
+  /* Reference (markdown rendered) */
+  .md table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 10px 0; }
+  .md th, .md td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  .md th { background: var(--panel); color: var(--accent); }
+  .md h1 { font-size: 22px; color: var(--accent); }
+  .md h2 { font-size: 18px; }
+  .md h3 { font-size: 15px; color: var(--accent); }
+  .md code { background: var(--panel2); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="header-title">Train_</h1>
+  <div class="sub" id="header-sub">CrossFit return tracker</div>
+</header>
+
+<main>
+  <!-- ============ ONBOARDING ============ -->
+  <section id="view-onboarding" class="view">
+    <h2>Welcome back</h2>
+    <p style="color:var(--muted)">Quick setup so we can give you sessions that fit. You can change all of this later in Settings.</p>
+
+    <div class="card">
+      <div class="title">1. Equipment available</div>
+      <div class="body">
+        <div class="group-title">Barbell</div>
+        <div class="chips" data-eq-group="barbell"></div>
+        <div class="group-title">Free weights</div>
+        <div class="chips" data-eq-group="freeweights"></div>
+        <div class="group-title">Gymnastic</div>
+        <div class="chips" data-eq-group="gymnastic"></div>
+        <div class="group-title">Cardio</div>
+        <div class="chips" data-eq-group="cardio"></div>
+        <div class="group-title">Other</div>
+        <div class="chips" data-eq-group="other"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">2. Injuries / things to avoid</div>
+      <div class="body">
+        <p style="color:var(--muted);font-size:13px">Tap any body part you need to avoid loading. Movements that hit it will be filtered out.</p>
+        <div class="chips" id="injury-chips"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">3. Your 1RMs (optional, kg)</div>
+      <div class="body">
+        <p style="color:var(--muted);font-size:12px;margin-top:0">Any you fill in drive WOD weights. Movements without a 1RM use a sensible default.</p>
+        <div class="grid2">
+          <div><label>Back Squat</label><input type="number" id="rm-bs"    inputmode="decimal" placeholder="120"></div>
+          <div><label>Front Squat</label><input type="number" id="rm-fs"    inputmode="decimal" placeholder="100"></div>
+          <div><label>Bench Press</label><input type="number" id="rm-bench" inputmode="decimal" placeholder="90"></div>
+          <div><label>Deadlift</label>   <input type="number" id="rm-dl"    inputmode="decimal" placeholder="160"></div>
+          <div><label>Clean</label>      <input type="number" id="rm-cl"    inputmode="decimal" placeholder="90"></div>
+          <div><label>Snatch</label>     <input type="number" id="rm-sn"    inputmode="decimal" placeholder="65"></div>
+          <div><label>Push Press</label> <input type="number" id="rm-pp"    inputmode="decimal" placeholder="70"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn" id="onboarding-done">Save & continue</button>
+  </section>
+
+  <!-- ============ TODAY ============ -->
+  <section id="view-today" class="view">
+    <div id="today-content"></div>
+  </section>
+
+  <!-- ============ LOG ============ -->
+  <section id="view-log" class="view">
+    <h2>History</h2>
+    <div id="log-content"></div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="view-settings" class="view">
+    <h2>Settings</h2>
+    <div id="settings-content"></div>
+  </section>
+
+  <!-- ============ PLAYER ============ -->
+  <section id="view-player" class="view">
+    <div id="player-content"></div>
+  </section>
+
+  <!-- ============ BUILD ============ -->
+  <section id="view-build" class="view">
+    <div id="build-content"></div>
+  </section>
+
+  <!-- ============ REFERENCE ============ -->
+  <section id="view-reference" class="view">
+    <h2>Movement library</h2>
+    <input type="text" id="ref-search" placeholder="Search movements…" autocomplete="off"
+           style="margin-bottom:12px;background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:8px;width:100%">
+    <div id="ref-meta" style="font-size:12px;color:var(--muted);margin-bottom:6px"></div>
+    <div id="ref-content"></div>
+  </section>
+</main>
+
+<nav id="bottom">
+  <button data-view="today" class="active"><span class="icon">▣</span><span>Today</span></button>
+  <button data-view="build"><span class="icon">▦</span><span>Workouts</span></button>
+  <button data-view="log"><span class="icon">≡</span><span>Log</span></button>
+  <button data-view="settings"><span class="icon">⚙</span><span>Settings</span></button>
+  <button data-view="reference"><span class="icon">★</span><span>Reference</span></button>
+</nav>
+
+<script>
+/* =========================================================
+   DATA — equipment, body parts, movement library, templates
+   This is intentionally small for v1. Easy to extend later.
+   ========================================================= */
+
+const EQUIPMENT = [
+  // group: barbell
+  { id: 'barbell',     label: 'Barbell + plates', group: 'barbell' },
+  { id: 'rack',        label: 'Squat rack',       group: 'barbell' },
+  { id: 'bench',       label: 'Flat bench',       group: 'barbell' },
+  // group: freeweights
+  { id: 'dumbbells',   label: 'Dumbbells',        group: 'freeweights' },
+  { id: 'kettlebells', label: 'Kettlebells',      group: 'freeweights' },
+  { id: 'sandbag',     label: 'Sandbag',          group: 'freeweights' },
+  // group: gymnastic
+  { id: 'pullup_bar',  label: 'Pull-up bar',      group: 'gymnastic' },
+  { id: 'rings',       label: 'Rings',            group: 'gymnastic' },
+  { id: 'wall',        label: 'Wall (HSPU/WW)',   group: 'gymnastic' },
+  { id: 'rope',        label: 'Climbing rope',    group: 'gymnastic' },
+  { id: 'dip_bars',    label: 'Dip / parallel bars', group: 'gymnastic' },
+  { id: 'ghd',         label: 'GHD machine',      group: 'gymnastic' },
+  // group: cardio
+  { id: 'rower',       label: 'Rower',                       group: 'cardio' },
+  { id: 'bike',        label: 'Air bike',                    group: 'cardio' },
+  { id: 'ski',         label: 'Ski erg',                     group: 'cardio' },
+  { id: 'jump_rope',   label: 'Jump rope',                   group: 'cardio' },
+  { id: 'treadmill',   label: 'Treadmill',                   group: 'cardio' },
+  { id: 'run_space',   label: 'Outdoor run / track',         group: 'cardio' },
+  { id: 'shuttle_space', label: 'Indoor shuttle space (~10m)', group: 'cardio' },
+  // group: other
+  { id: 'box',         label: 'Plyo box',         group: 'other' },
+  { id: 'wall_ball',   label: 'Wall ball + wall', group: 'other' },
+  { id: 'med_ball',    label: 'Medicine ball',    group: 'other' },
+  { id: 'sled',        label: 'Sled',             group: 'other' },
+];
+
+const BODY_PARTS = [
+  { id: 'left_shoulder',  label: 'L Shoulder' },
+  { id: 'right_shoulder', label: 'R Shoulder' },
+  { id: 'left_elbow',     label: 'L Elbow' },
+  { id: 'right_elbow',    label: 'R Elbow' },
+  { id: 'left_wrist',     label: 'L Wrist' },
+  { id: 'right_wrist',    label: 'R Wrist' },
+  { id: 'lower_back',     label: 'Lower back' },
+  { id: 'left_knee',      label: 'L Knee' },
+  { id: 'right_knee',     label: 'R Knee' },
+  { id: 'left_ankle',     label: 'L Ankle' },
+  { id: 'right_ankle',    label: 'R Ankle' },
+  { id: 'neck',           label: 'Neck' },
+];
+
+// Body-part shortcuts used inside movement defs
+const SHOULDERS = ['left_shoulder', 'right_shoulder'];
+const ELBOWS    = ['left_elbow', 'right_elbow'];
+const WRISTS    = ['left_wrist', 'right_wrist'];
+const KNEES     = ['left_knee', 'right_knee'];
+const ANKLES    = ['left_ankle', 'right_ankle'];
+
+/* MOVEMENTS
+   Slot categories used by templates:
+     strength_squat, strength_bench, strength_clean,
+     gym_pull, gym_push, gym_lower,
+     cardio, weighted_compound, weighted_carry, jump,
+     core, ball, burpee
+*/
+const MOVEMENTS = [
+  // ============================================
+  // STRENGTH — SQUAT (named-lift slot for Monday)
+  // ============================================
+  { id: 'back_squat',       name: 'Back Squat',           slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'goblet_squat',     name: 'Goblet Squat',         slot: 'strength_squat', equipment: ['kettlebells'],      loads: [...KNEES, 'lower_back'] },
+  { id: 'db_back_squat',    name: 'DB Back Squat',        slot: 'strength_squat', equipment: ['dumbbells'],        loads: [...KNEES, ...SHOULDERS] },
+  { id: 'db_front_squat',   name: 'DB Front Squat',       slot: 'strength_squat', equipment: ['dumbbells'],        loads: [...KNEES, ...SHOULDERS] },
+
+  // ============================================
+  // STRENGTH — BENCH (named-lift slot for Wednesday)
+  // ============================================
+  { id: 'bench_press',      name: 'Bench Press',          slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'db_bench',         name: 'DB Bench Press',       slot: 'strength_bench', equipment: ['dumbbells','bench'],loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'floor_press',      name: 'Floor Press',          slot: 'strength_bench', equipment: ['barbell'],          loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'db_floor_press',   name: 'DB Floor Press',       slot: 'strength_bench', equipment: ['dumbbells'],        loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'pushup',           name: 'Push Up',              slot: 'strength_bench', equipment: [],                   loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+
+  // ============================================
+  // STRENGTH — CLEAN (named-lift slot for Friday)
+  // ============================================
+  { id: 'hang_clean',       name: 'Hang Clean',           slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'clean' },
+  { id: 'power_clean',      name: 'Power Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS] },
+  { id: 'squat_clean',      name: 'Squat Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS] },
+  { id: 'hang_squat_clean', name: 'Hang Squat Clean',     slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS] },
+  { id: 'clean_jerk',       name: 'Clean & Jerk',         slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS] },
+  { id: 'db_hang_clean',    name: 'DB Hang Clean',        slot: 'strength_clean', equipment: ['dumbbells'],        loads: ['lower_back', ...SHOULDERS] },
+  { id: 'kb_clean',         name: 'KB Clean',             slot: 'strength_clean', equipment: ['kettlebells'],      loads: ['lower_back', ...SHOULDERS] },
+
+  // ============================================
+  // GYM — PULL
+  // ============================================
+  { id: 'pull_up',          name: 'Pull Up',              slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'strict_pull_up',   name: 'Strict Pull Up',       slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'chin_up',          name: 'Chin Up',              slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'jumping_pull_up',  name: 'Jumping Pull Up',      slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'c2b',              name: 'Chest-to-Bar',         slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'bmu',              name: 'Bar Muscle Up',        slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'ring_row',         name: 'Ring Row',             slot: 'gym_pull', equipment: ['rings'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'ring_pull',        name: 'Ring Pull',            slot: 'gym_pull', equipment: ['rings'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'rmu',              name: 'Ring Muscle Up',       slot: 'gym_pull', equipment: ['rings'],                  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'low_ring_mu',      name: 'Low-Ring MU',          slot: 'gym_pull', equipment: ['rings'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'pull_over',        name: 'Pull Over (Bar)',      slot: 'gym_pull', equipment: ['pullup_bar'],            loads: [...SHOULDERS, ...ELBOWS, 'lower_back'] },
+
+  // ============================================
+  // GYM — PUSH
+  // ============================================
+  { id: 'shspu',            name: 'Strict HSPU',          slot: 'gym_push', equipment: ['wall'],                   loads: [...SHOULDERS, ...ELBOWS, 'neck'] },
+  { id: 'wf_shspu',         name: 'Wall-Facing SHSPU',    slot: 'gym_push', equipment: ['wall'],                   loads: [...SHOULDERS, ...ELBOWS, ...WRISTS, 'neck'] },
+  { id: 'kipping_hspu',     name: 'Kipping HSPU',         slot: 'gym_push', equipment: ['wall'],                   loads: [...SHOULDERS, ...ELBOWS, 'neck'] },
+  { id: 'pike_pushup_box',  name: 'Pike Push Up (box)',   slot: 'gym_push', equipment: ['box'],                    loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'pike_pushup',      name: 'Pike Push Up',         slot: 'gym_push', equipment: [],                          loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'ring_dip',         name: 'Ring Dip',             slot: 'gym_push', equipment: ['rings'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'bench_dip',        name: 'Bench Dip',            slot: 'gym_push', equipment: ['bench'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'box_dip',          name: 'Box Dip',              slot: 'gym_push', equipment: ['box'],                    loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'handstand_hold',   name: 'Handstand Hold',       slot: 'gym_push', equipment: ['wall'],                   loads: [...SHOULDERS, ...WRISTS, 'neck'] },
+
+  // ============================================
+  // GYM — LOWER / SKILL
+  // ============================================
+  { id: 'wall_walk',        name: 'Wall Walk',            slot: 'gym_lower', equipment: ['wall'],                   loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'half_wall_walk',   name: 'Half Wall Walk',       slot: 'gym_lower', equipment: ['wall'],                   loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'handstand_walk',   name: 'Handstand Walk',       slot: 'gym_lower', equipment: [],                          loads: [...SHOULDERS, ...WRISTS, 'neck'] },
+  { id: 'shoulder_taps_hs', name: 'HS Shoulder Taps',     slot: 'gym_lower', equipment: ['wall'],                   loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'pistol',           name: 'Pistol Squat',         slot: 'gym_lower', equipment: [],                          loads: [...KNEES, ...ANKLES] },
+  { id: 'box_pistol',       name: 'Box Pistol',           slot: 'gym_lower', equipment: ['box'],                     loads: [...KNEES] },
+  { id: 'skater_squat',     name: 'Skater Squat',         slot: 'gym_lower', equipment: [],                          loads: [...KNEES] },
+  { id: 'rope_climb',       name: 'Rope Climb',           slot: 'gym_lower', equipment: ['rope'],                    loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'legless_rope',     name: 'Legless Rope Climb',   slot: 'gym_lower', equipment: ['rope'],                    loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'lay_to_stand',     name: 'Lay-to-Stand (rope sub)', slot: 'gym_lower', equipment: [],                       loads: [...SHOULDERS] },
+  { id: 'bear_crawl',       name: 'Bear Crawl',           slot: 'gym_lower', equipment: [],                          loads: [...SHOULDERS, ...WRISTS] },
+
+  // ============================================
+  // CARDIO (machines + run + skip)
+  // ============================================
+  { id: 'row',              name: 'Cal Row',              slot: 'cardio', equipment: ['rower'],                     loads: ['lower_back'] },
+  { id: 'bike',             name: 'Cal Bike',             slot: 'cardio', equipment: ['bike'],                      loads: [] },
+  { id: 'ski',              name: 'Cal Ski',              slot: 'cardio', equipment: ['ski'],                       loads: [...SHOULDERS] },
+  { id: 'run',              name: 'Run',                  slot: 'cardio', equipment: [], equipmentAny: ['treadmill','run_space'], loads: [...KNEES, ...ANKLES] },
+  { id: 'shuttle',          name: 'Shuttle Run',          slot: 'cardio', equipment: ['shuttle_space'],             loads: [...KNEES, ...ANKLES] },
+  { id: 'du',               name: 'Double Under',         slot: 'cardio', equipment: ['jump_rope'],                 loads: [...ANKLES] },
+  { id: 'su',               name: 'Single Under',         slot: 'cardio', equipment: ['jump_rope'],                 loads: [...ANKLES] },
+  { id: 'crossover_du',     name: 'Crossover DU',         slot: 'cardio', equipment: ['jump_rope'],                 loads: [...ANKLES, ...SHOULDERS] },
+
+  // ============================================
+  // WEIGHTED COMPOUND (the bulk of WOD movements)
+  // ============================================
+  { id: 'thruster',         name: 'Thruster',             slot: 'weighted_compound', equipment: ['barbell'],         loads: [...SHOULDERS, ...WRISTS, 'lower_back'] },
+  { id: 'db_thruster',      name: 'Double DB Thruster',   slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'kb_thruster',      name: 'Double KB Thruster',   slot: 'weighted_compound', equipment: ['kettlebells'],     loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'front_squat',      name: 'Front Squat',          slot: 'weighted_compound', equipment: ['barbell'],         loads: [...KNEES, ...WRISTS, 'lower_back'] },
+  { id: 'oh_squat',         name: 'OH Squat',             slot: 'weighted_compound', equipment: ['barbell'],         loads: [...KNEES, ...SHOULDERS] },
+  { id: 'snatch',           name: 'Snatch',               slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back', ...SHOULDERS] },
+  { id: 'power_snatch',     name: 'Power Snatch',         slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back', ...SHOULDERS] },
+  { id: 'hang_snatch',      name: 'Hang Snatch',          slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back', ...SHOULDERS] },
+  { id: 'hang_power_snatch',name: 'Hang Power Snatch',    slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back', ...SHOULDERS] },
+  { id: 'sto_bb',           name: 'Shoulder to OH (BB)',  slot: 'weighted_compound', equipment: ['barbell'],         loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'push_press',       name: 'Push Press',           slot: 'weighted_compound', equipment: ['barbell'],         loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'push_jerk',        name: 'Push Jerk',            slot: 'weighted_compound', equipment: ['barbell'],         loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'split_jerk',       name: 'Split Jerk',           slot: 'weighted_compound', equipment: ['barbell'],         loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'deadlift',         name: 'Deadlift',             slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back'] },
+  { id: 'sumo_dl',          name: 'Sumo Deadlift',        slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back'] },
+  { id: 'rdl',              name: 'Romanian Deadlift',    slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back'] },
+  { id: 'good_morning',     name: 'Good Morning',         slot: 'weighted_compound', equipment: ['barbell'],         loads: ['lower_back'] },
+  { id: 'db_snatch',        name: 'DB Snatch',            slot: 'weighted_compound', equipment: ['dumbbells'],       loads: ['lower_back', ...SHOULDERS] },
+  { id: 'db_cj',            name: 'DB Clean & Jerk',      slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS, 'lower_back'] },
+  { id: 'db_push_press',    name: 'DB Push Press',        slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS] },
+  { id: 'db_push_jerk',     name: 'DB Push Jerk',         slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS] },
+  { id: 'db_sto',           name: 'DB Shoulder to OH',    slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS] },
+  { id: 'db_dl',            name: 'DB Deadlift',          slot: 'weighted_compound', equipment: ['dumbbells'],       loads: ['lower_back'] },
+  { id: 'devil_press',      name: 'DB Devil Press',       slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'sa_devil_press',   name: 'SA Devil Press',       slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'man_makers',       name: 'Man Makers',           slot: 'weighted_compound', equipment: ['dumbbells'],       loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'kb_swing',         name: 'KB Swing',             slot: 'weighted_compound', equipment: ['kettlebells'],     loads: ['lower_back', ...SHOULDERS] },
+  { id: 'sa_kb_swing',      name: 'SA KB Swing',          slot: 'weighted_compound', equipment: ['kettlebells'],     loads: ['lower_back', ...SHOULDERS] },
+  { id: 'kb_snatch',        name: 'KB Snatch',            slot: 'weighted_compound', equipment: ['kettlebells'],     loads: ['lower_back', ...SHOULDERS] },
+  { id: 'kb_cj',            name: 'KB Clean & Jerk',      slot: 'weighted_compound', equipment: ['kettlebells'],     loads: [...SHOULDERS, 'lower_back'] },
+  { id: 'sandbag_clean',    name: 'Sandbag Clean',        slot: 'weighted_compound', equipment: ['sandbag'],         loads: ['lower_back', ...SHOULDERS] },
+  { id: 'sandbag_dl',       name: 'Sandbag Deadlift',     slot: 'weighted_compound', equipment: ['sandbag'],         loads: ['lower_back'] },
+  { id: 'sandbag_cp',       name: 'Sandbag Clean & Press',slot: 'weighted_compound', equipment: ['sandbag'],         loads: ['lower_back', ...SHOULDERS] },
+
+  // ============================================
+  // WEIGHTED CARRY / LUNGE
+  // ============================================
+  { id: 'db_lunge',         name: 'DB Walking Lunge',     slot: 'weighted_carry', equipment: ['dumbbells'],          loads: [...KNEES] },
+  { id: 'db_oh_lunge',      name: 'DB OH Lunge',          slot: 'weighted_carry', equipment: ['dumbbells'],          loads: [...KNEES, ...SHOULDERS] },
+  { id: 'sa_db_oh_lunge',   name: 'SA DB OH Lunge',       slot: 'weighted_carry', equipment: ['dumbbells'],          loads: [...KNEES, ...SHOULDERS] },
+  { id: 'goblet_lunge',     name: 'Goblet Lunge',         slot: 'weighted_carry', equipment: ['kettlebells'],        loads: [...KNEES] },
+  { id: 'kb_lunge',         name: 'Double KB Lunge',      slot: 'weighted_carry', equipment: ['kettlebells'],        loads: [...KNEES] },
+  { id: 'br_lunge',         name: 'Back-Rack Lunge',      slot: 'weighted_carry', equipment: ['barbell'],            loads: [...KNEES, 'lower_back'] },
+  { id: 'fr_lunge',         name: 'Front-Rack Lunge',     slot: 'weighted_carry', equipment: ['barbell'],            loads: [...KNEES, ...WRISTS] },
+  { id: 'reverse_br_lunge', name: 'Back-Rack Reverse Lunge',slot: 'weighted_carry', equipment: ['barbell'],          loads: [...KNEES, 'lower_back'] },
+  { id: 'db_step_up',       name: 'DB Step Up',           slot: 'weighted_carry', equipment: ['dumbbells','box'],    loads: [...KNEES] },
+  { id: 'kb_step_up',       name: 'KB Step Up',           slot: 'weighted_carry', equipment: ['kettlebells','box'],  loads: [...KNEES] },
+  { id: 'farmer_db',        name: 'DB Farmer Carry',      slot: 'weighted_carry', equipment: ['dumbbells'],          loads: ['lower_back'] },
+  { id: 'farmer_kb',        name: 'KB Farmer Carry',      slot: 'weighted_carry', equipment: ['kettlebells'],        loads: ['lower_back'] },
+  { id: 'sandbag_carry',    name: 'Sandbag Bear Hug Carry',slot: 'weighted_carry', equipment: ['sandbag'],            loads: ['lower_back'] },
+  { id: 'sa_kb_carry',      name: 'SA KB OH Carry',       slot: 'weighted_carry', equipment: ['kettlebells'],        loads: [...SHOULDERS] },
+
+  // ============================================
+  // JUMP
+  // ============================================
+  { id: 'box_jump',         name: 'Box Jump',             slot: 'jump', equipment: ['box'],                          loads: [...KNEES, ...ANKLES] },
+  { id: 'box_jump_over',    name: 'Box Jump Over',        slot: 'jump', equipment: ['box'],                          loads: [...KNEES, ...ANKLES] },
+  { id: 'step_up',          name: 'Step Up',              slot: 'jump', equipment: ['box'],                          loads: [...KNEES] },
+  { id: 'broad_jump',       name: 'Broad Jump',           slot: 'jump', equipment: [],                                loads: [...KNEES, ...ANKLES] },
+  { id: 'tuck_jump',        name: 'Tuck Jump',            slot: 'jump', equipment: [],                                loads: [...KNEES, ...ANKLES] },
+  { id: 'jumping_lunge',    name: 'Jumping Lunge',        slot: 'jump', equipment: [],                                loads: [...KNEES, ...ANKLES] },
+  { id: 'squat_jump',       name: 'Squat Jump',           slot: 'jump', equipment: [],                                loads: [...KNEES, ...ANKLES] },
+
+  // ============================================
+  // CORE
+  // ============================================
+  { id: 'sit_up',           name: 'Sit Up',               slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'hollow_rock',      name: 'Hollow Rock',          slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'plank',            name: 'Plank',                slot: 'core', equipment: [],                                loads: [...SHOULDERS] },
+  { id: 'side_plank',       name: 'Side Plank',           slot: 'core', equipment: [],                                loads: [...SHOULDERS] },
+  { id: 'v_up',             name: 'V-Up',                 slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'russian_twist',    name: 'Russian Twist',        slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'flutter_kick',     name: 'Flutter Kick',         slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'leg_raise',        name: 'Lying Leg Raise',      slot: 'core', equipment: [],                                loads: ['lower_back'] },
+  { id: 'l_sit',            name: 'L-Sit',                slot: 'core', equipment: [],                                loads: [...SHOULDERS] },
+  { id: 'ttb',              name: 'Toes to Bar',          slot: 'core', equipment: ['pullup_bar'],                    loads: [...SHOULDERS] },
+  { id: 'kte',              name: 'Knees to Elbow',       slot: 'core', equipment: ['pullup_bar'],                    loads: [...SHOULDERS] },
+  { id: 'ktc',              name: 'Knees to Chest',       slot: 'core', equipment: ['pullup_bar'],                    loads: [...SHOULDERS] },
+  { id: 'hkr',              name: 'Hanging Knee Raise',   slot: 'core', equipment: ['pullup_bar'],                    loads: [...SHOULDERS] },
+  { id: 'ttr',              name: 'Toes to Ring',         slot: 'core', equipment: ['rings'],                          loads: [...SHOULDERS] },
+
+  // ============================================
+  // BALL (wall ball + wall)
+  // ============================================
+  { id: 'wall_ball',        name: 'Wall Ball',            slot: 'ball', equipment: ['wall_ball'],                     loads: [...SHOULDERS, ...KNEES] },
+
+  // ============================================
+  // BURPEE (and burpee variants)
+  // ============================================
+  { id: 'burpee',           name: 'Burpee',               slot: 'burpee', equipment: [],                              loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'burpee_box',       name: 'Burpee Box Jump',      slot: 'burpee', equipment: ['box'],                         loads: [...KNEES, ...SHOULDERS] },
+  { id: 'burpee_box_over',  name: 'Burpee Box Jump Over', slot: 'burpee', equipment: ['box'],                         loads: [...KNEES, ...SHOULDERS] },
+  { id: 'burpee_pullup',    name: 'Burpee Pull Up',       slot: 'burpee', equipment: ['pullup_bar'],                  loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'burpee_target',    name: 'Burpee to Target',     slot: 'burpee', equipment: [],                               loads: [...SHOULDERS, ...WRISTS, ...KNEES] },
+  { id: 'burpee_over_line', name: 'Burpee Over Line',     slot: 'burpee', equipment: [],                               loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'bar_facing_burpee',name: 'Bar Facing Burpee',    slot: 'burpee', equipment: ['barbell'],                     loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'burpee_broad_jump',name: 'Burpee + Broad Jump',  slot: 'burpee', equipment: [],                               loads: [...SHOULDERS, ...WRISTS, ...KNEES, ...ANKLES] },
+  { id: 'burpee_dl',        name: 'Burpee Deadlift',      slot: 'burpee', equipment: ['barbell'],                     loads: [...SHOULDERS, ...WRISTS, 'lower_back'] },
+  { id: 'burpee_over_db',   name: 'Burpee Over DB',       slot: 'burpee', equipment: ['dumbbells'],                   loads: [...SHOULDERS, ...WRISTS] },
+
+  // ============================================
+  // ADDED — broader CrossFit catalog
+  // ============================================
+  // Squat / lower
+  { id: 'air_squat',        name: 'Air Squat',            slot: 'gym_lower', equipment: [],                              loads: [...KNEES] },
+  { id: 'wall_climb',       name: 'Wall Climb',           slot: 'gym_lower', equipment: ['wall'],                         loads: [...SHOULDERS, ...WRISTS] },
+  { id: 'bulgarian_ss',     name: 'Bulgarian Split Squat',slot: 'weighted_compound', equipment: ['dumbbells','bench'],   loads: [...KNEES] },
+
+  // Strict press family (vertical)
+  { id: 'strict_press',     name: 'Strict Press',         slot: 'weighted_compound', equipment: ['barbell'],             loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'db_strict_press',  name: 'DB Strict Press',      slot: 'weighted_compound', equipment: ['dumbbells'],           loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'sa_db_press',      name: 'SA DB Press',          slot: 'weighted_compound', equipment: ['dumbbells'],           loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'kb_strict_press',  name: 'KB Strict Press',      slot: 'weighted_compound', equipment: ['kettlebells'],         loads: [...SHOULDERS, ...ELBOWS] },
+
+  // Push variants
+  { id: 'hrpu',             name: 'Hand-Release Push Up', slot: 'gym_push', equipment: [],                                loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'diamond_pushup',   name: 'Diamond Push Up',      slot: 'gym_push', equipment: [],                                loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+  { id: 'bar_dip',          name: 'Bar Dip',              slot: 'gym_push', equipment: ['dip_bars'],                      loads: [...SHOULDERS, ...ELBOWS] },
+
+  // Row family
+  { id: 'bb_row',           name: 'Bent-Over Row',        slot: 'weighted_compound', equipment: ['barbell'],             loads: [...SHOULDERS, ...ELBOWS, 'lower_back'] },
+  { id: 'pendlay_row',      name: 'Pendlay Row',          slot: 'weighted_compound', equipment: ['barbell'],             loads: [...SHOULDERS, ...ELBOWS, 'lower_back'] },
+  { id: 'db_row',           name: 'DB Bent-Over Row',     slot: 'weighted_compound', equipment: ['dumbbells'],           loads: [...SHOULDERS, ...ELBOWS, 'lower_back'] },
+  { id: 'sa_db_row',        name: 'SA DB Row',            slot: 'weighted_compound', equipment: ['dumbbells'],           loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'renegade_row',     name: 'Renegade Row',         slot: 'weighted_compound', equipment: ['dumbbells'],           loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
+
+  // Hinge / posterior chain
+  { id: 'hip_thrust',       name: 'Hip Thrust',           slot: 'weighted_compound', equipment: ['barbell','bench'],     loads: ['lower_back'] },
+  { id: 'glute_bridge',     name: 'Glute Bridge',         slot: 'core', equipment: [],                                    loads: ['lower_back'] },
+  { id: 'sl_dl',            name: 'Single-Leg DL',        slot: 'weighted_compound', equipment: ['dumbbells'],           loads: ['lower_back', ...KNEES] },
+
+  // Olympic / complex
+  { id: 'bear_complex',     name: 'Bear Complex',         slot: 'weighted_compound', equipment: ['barbell'],             loads: ['lower_back', ...SHOULDERS, ...KNEES, ...WRISTS] },
+  { id: 'tgu',              name: 'Turkish Get-Up',       slot: 'weighted_compound', equipment: ['kettlebells'],         loads: [...SHOULDERS, ...WRISTS, 'lower_back'] },
+
+  // Med ball
+  { id: 'mb_clean',         name: 'Med Ball Clean',       slot: 'weighted_compound', equipment: ['med_ball'],            loads: ['lower_back', ...SHOULDERS] },
+  { id: 'mb_slam',          name: 'Med Ball Slam',        slot: 'weighted_compound', equipment: ['med_ball'],            loads: [...SHOULDERS, 'lower_back'] },
+  { id: 'mb_twist',         name: 'Med Ball Russian Twist',slot: 'core', equipment: ['med_ball'],                         loads: ['lower_back'] },
+
+  // Core
+  { id: 'strict_ttb',       name: 'Strict Toes to Bar',   slot: 'core', equipment: ['pullup_bar'],                        loads: [...SHOULDERS] },
+  { id: 'ghd_situp',        name: 'GHD Sit Up',           slot: 'core', equipment: ['ghd'],                                loads: ['lower_back'] },
+  { id: 'ghd_back_ext',     name: 'GHD Back Extension',   slot: 'core', equipment: ['ghd'],                                loads: ['lower_back'] },
+
+  // Sled (cardio-ish)
+  { id: 'sled_push',        name: 'Sled Push',            slot: 'cardio', equipment: ['sled'],                            loads: [...KNEES] },
+  { id: 'sled_drag',        name: 'Sled Drag',            slot: 'cardio', equipment: ['sled'],                            loads: [...KNEES, 'lower_back'] },
+];
+
+/* WARMUPS / COOLDOWNS — keyed by session type. Tailored to the day's focus. */
+const WARMUPS = {
+  squat_legs: {
+    title: 'Warm-up — 5–8 min',
+    items: [
+      '500m easy row or bike',
+      '10 leg swings each side',
+      '10 cossack squats',
+      'Ankle mobility — 30s / side',
+      '15 air squats',
+      '5 empty-bar back squats',
+    ],
+  },
+  gym_mixed: {
+    title: 'Warm-up — 5–8 min',
+    items: [
+      '500m easy row',
+      'Arm circles — 10 fwd / 10 back',
+      'Banded shoulder pass-throughs × 10',
+      '10 scap pull-ups (or scap retractions)',
+      "World's greatest stretch × 5 / side",
+      '5 hollow holds (10 sec each)',
+    ],
+  },
+  bench_push: {
+    title: 'Warm-up — 5–8 min',
+    items: [
+      '500m easy row',
+      'Banded pass-throughs × 10',
+      'Wall slides × 10',
+      'Push-up to down dog × 8',
+      'Cuban press (light) × 10',
+      '10 reps with empty bar on bench',
+    ],
+  },
+  core_chipper: {
+    title: 'Warm-up — 6–8 min',
+    items: [
+      '300m row + 300m bike easy',
+      'Inchworms × 5',
+      'Dead bug × 10',
+      'Bird-dog × 10',
+      'Glute bridge × 15',
+      '15 air squats',
+    ],
+  },
+  clean_triplet: {
+    title: 'Warm-up — 6–8 min',
+    items: [
+      '500m easy row',
+      'PVC pass-throughs × 10',
+      'PVC overhead squat × 10',
+      '5 Romanian DL with empty bar',
+      '5 empty-bar high pulls',
+      '5 empty-bar hang power cleans',
+      'Front-rack mobility — 30s / side',
+    ],
+  },
+  long_workout: {
+    title: 'Warm-up — 8–10 min',
+    items: [
+      '500m row + 500m bike easy',
+      'Dynamic flow: leg swings, arm circles, hip openers',
+      "World's greatest stretch × 5 / side",
+      '15 air squats',
+      '10 push-ups',
+      'Rehearse 1–2 WOD movements at light load',
+    ],
+  },
+  rest: {
+    title: 'Mobility flow — 15–20 min',
+    items: [
+      'Couch stretch — 60s / side',
+      'Pigeon — 60s / side',
+      "World's greatest stretch — 5 / side",
+      'Thoracic spine rotations × 10 / side',
+      'Cat-cow × 10',
+      "Child's pose with reach — 30s",
+      'Foam roll: IT band, quads, lats',
+    ],
+  },
+};
+
+const COOLDOWNS = {
+  squat_legs: {
+    title: 'Cool-down — 5 min',
+    items: [
+      'Couch stretch — 60s / side',
+      'Standing hamstring stretch — 60s / side',
+      'Pigeon — 60s / side',
+      'Foam roll quads + glutes — 2 min',
+    ],
+  },
+  gym_mixed: {
+    title: 'Cool-down — 5 min',
+    items: [
+      "Child's pose with reach — 60s",
+      'Hanging lat stretch on bar — 30s / side',
+      'Doorway pec stretch — 30s / side',
+      'Foam roll lats + upper back',
+    ],
+  },
+  bench_push: {
+    title: 'Cool-down — 5 min',
+    items: [
+      'Doorway pec stretch — 60s / side',
+      'Triceps overhead stretch — 30s / side',
+      'Cross-body shoulder stretch — 30s / side',
+      'Foam roll chest + lats',
+    ],
+  },
+  core_chipper: {
+    title: 'Cool-down — 5 min',
+    items: [
+      "Child's pose — 60s",
+      'Cobra — 30s × 3',
+      'Supine knees-to-chest — 30s',
+      'Easy walk 2–3 min',
+    ],
+  },
+  clean_triplet: {
+    title: 'Cool-down — 5 min',
+    items: [
+      'Hip flexor stretch — 60s / side',
+      'Front-rack / wrist stretch — 30s / side',
+      'Lat stretch — 30s / side',
+      'Foam roll thoracic spine',
+    ],
+  },
+  long_workout: {
+    title: 'Cool-down — 8 min',
+    items: [
+      'Easy walk — 3 min',
+      'Pigeon — 60s / side',
+      'Couch stretch — 60s / side',
+      'Lat stretch — 30s / side',
+      'Foam roll: quads, glutes, lats',
+    ],
+  },
+  rest: null, // the whole session IS the mobility flow
+};
+
+/* SESSION TYPES — independent of weekday. Order in the rotation is user-defined. */
+const SESSION_TYPES = [
+  { id: 'squat_legs',    label: 'Squat + Leg/Lung WOD',       short: 'Squat day' },
+  { id: 'gym_mixed',     label: 'Gymnastic + Mixed Modal',    short: 'Gym day' },
+  { id: 'bench_push',    label: 'Bench + Push WOD',           short: 'Bench day' },
+  { id: 'core_chipper',  label: 'Core + Long Cardio Chipper', short: 'Core / Chipper' },
+  { id: 'clean_triplet', label: 'Hang Clean + Short Triplet', short: 'Clean day' },
+  { id: 'long_workout',  label: 'Long Workout',               short: 'Long' },
+  { id: 'rest',          label: 'Active Recovery / Rest',     short: 'Rest' },
+];
+
+const DEFAULT_ROTATION = ['squat_legs','gym_mixed','bench_push','core_chipper','clean_triplet','long_workout','rest'];
+
+/* SESSION TEMPLATES — keyed by session type id.
+   `strength` (optional): named lift block with a rep scheme.
+   `wods`:    array of WOD format options. Generator picks one at random.
+              Re-rolling cycles between them.
+   Each WOD block has: { title, slots, note? }. The title carries the
+   format (EMOM / Rounds / Every N min / 21-15-9 / AMRAP / Chipper / etc).
+*/
+const TEMPLATES = {
+  squat_legs: {
+    name: 'Squat + Leg/Lung WOD',
+    strength: { slot: 'strength_squat', scheme: '4 rounds: 5 reps @ {pct}%, 8 lunges, 5 reps, 2 min rest' },
+    wods: [
+      { title: 'EMOM 16 min',                       slots: [
+          { slot: 'cardio',           reps: 14 },
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'burpee',           reps: 10 },
+          { slot: 'rest' },
+        ], note: 'A / B / C / Rest, rotating each minute' },
+      { title: '3 Rounds For Time (12 min cap)',    slots: [
+          { slot: 'cardio',           reps: 16 },
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'core',             reps: 20 },
+          { slot: 'weighted_compound', reps: 8 },
+        ] },
+      { title: 'Every 4 min × 5 (20 min total)',    slots: [
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',             reps: 10 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',             reps: 10 },
+        ] },
+      { title: '21-15-9 Reps (10 min cap)',         slots: [
+          { slot: 'weighted_compound' },
+          { slot: 'weighted_compound' },
+          { slot: 'cardio' },
+        ] },
+      { title: 'EMOM 20 min',                       slots: [
+          { slot: 'gym_lower',        reps: 10 },
+          { slot: 'burpee',           reps: 8 },
+          { slot: 'weighted_carry',   reps: 10 },
+          { slot: 'rest' },
+        ], note: 'A / B / C / D, rotating each minute' },
+    ],
+  },
+  gym_mixed: {
+    name: 'Gymnastic + Mixed Modal',
+    strength: { slot: null, scheme: 'EMOM 10 min — Odd: 5 ring/MU work; Even: 30s plank' },
+    wods: [
+      { title: '4 Rounds For Time (16 min cap)',    slots: [
+          { slot: 'cardio',           reps: 10 },
+          { slot: 'gym_lower',        reps: 4 },
+          { slot: 'gym_pull',         reps: 8 },
+          { slot: 'burpee',           reps: 5 },
+        ] },
+      { title: 'Every 4 min × 5 (20 min total)',    slots: [
+          { slot: 'gym_lower',        reps: 4 },
+          { slot: 'gym_pull',         reps: 8 },
+          { slot: 'cardio',           reps: 18 },
+        ] },
+      { title: '3 Rounds For Time (15 min cap)',    slots: [
+          { slot: 'cardio',           reps: 16 },
+          { slot: 'gym_lower',        reps: 3 },
+          { slot: 'cardio',           reps: 16 },
+          { slot: 'gym_pull',         reps: 10 },
+          { slot: 'cardio',           reps: 16 },
+        ] },
+      { title: 'AMRAP 12 min',                      slots: [
+          { slot: 'gym_pull',         reps: 8 },
+          { slot: 'core',             reps: 12 },
+          { slot: 'cardio',           reps: 12 },
+        ] },
+    ],
+  },
+  bench_push: {
+    name: 'Bench + Push WOD',
+    strength: { slot: 'strength_bench', scheme: '4 rounds: 5 reps @ {pct}%, 5 push, 5 reps, 2 min rest' },
+    wods: [
+      { title: '7 Rounds For Time (20 min cap)',    slots: [
+          { slot: 'cardio',           reps: 50 },
+          { slot: 'weighted_compound', reps: 12 },
+          { slot: 'weighted_compound', reps: 9 },
+          { slot: 'weighted_compound', reps: 6 },
+        ], note: 'DT-style: deadlift / hang clean / STO' },
+      { title: '6 Rounds For Time (18 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 3 },
+          { slot: 'strength_bench',   reps: 6 },
+          { slot: 'ball',             reps: 18 },
+          { slot: 'cardio',           reps: 50 },
+        ] },
+      { title: '40-30-20-10 Reps (15 min cap)',     slots: [
+          { slot: 'strength_bench' },
+          { slot: 'weighted_carry' },
+          { slot: 'weighted_compound' },
+        ] },
+      { title: '5 + 5 Rounds (20 min cap)',         slots: [
+          { slot: 'weighted_compound', reps: 8 },
+          { slot: 'gym_pull',         reps: 10 },
+        ], note: 'then 5 rounds: bench + KB swing' },
+      { title: '5 Rounds For Time (15 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 5 },
+          { slot: 'strength_bench',   reps: 8 },
+          { slot: 'ball',             reps: 15 },
+          { slot: 'cardio',           reps: 12 },
+        ] },
+    ],
+  },
+  core_chipper: {
+    name: 'Core + Long Cardio Chipper',
+    strength: { slot: null, scheme: 'Core (10 min cap): 50 sit-ups, 20 TTB, 50 hollow rocks, 20 TTB' },
+    wods: [
+      { title: 'For Time — Chipper (25 min cap)',   slots: [
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'gym_lower',        reps: 10 },
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'weighted_compound', reps: 20 },
+          { slot: 'cardio',           reps: 40 },
+          { slot: 'ball',             reps: 30 },
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'weighted_carry',   reps: 40 },
+        ] },
+      { title: '3 × 8 min AMRAP (30 min total)',    slots: [
+          { slot: 'cardio',           reps: 15 },
+          { slot: 'cardio',           reps: 15 },
+          { slot: 'burpee',           reps: 10 },
+          { slot: 'gym_lower',        reps: 3 },
+          { slot: 'gym_lower',        reps: 1 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'core',             reps: 50 },
+        ], note: '2 min rest between AMRAPs' },
+      { title: 'Every 2 min × 4 (8 min total)',     slots: [
+          { slot: 'cardio',           reps: 12 },
+          { slot: 'weighted_compound', reps: 6 },
+          { slot: 'burpee',           reps: 8 },
+          { slot: 'core',             reps: 5 },
+          { slot: 'cardio',           reps: 12 },
+          { slot: 'weighted_compound', reps: 12 },
+        ], note: 'rotating pairs' },
+      { title: 'For Time (20 min cap)',             slots: [
+          { slot: 'cardio',           reps: 40 },
+          { slot: 'cardio',           reps: 75 },
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'cardio',           reps: 75 },
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'cardio',           reps: 75 },
+        ], note: 'mixed cardio + DU intervals' },
+    ],
+  },
+  clean_triplet: {
+    name: 'Hang Clean + Short Triplet',
+    strength: { slot: 'strength_clean', scheme: 'Every 2 min × 5: 5 reps @ {pct}%' },
+    wods: [
+      { title: '4 Rounds For Time (12 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'weighted_carry',   reps: 10 },
+          { slot: 'weighted_compound', reps: 5 },
+        ] },
+      { title: '5 Rounds For Time (16 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 5 },
+          { slot: 'weighted_compound', reps: 5 },
+          { slot: 'weighted_carry',   reps: 10 },
+          { slot: 'cardio',           reps: 10 },
+        ] },
+      { title: '5 Rounds For Time (15 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'cardio',           reps: 15 },
+        ] },
+      { title: '4 Rounds For Time (14 min cap)',    slots: [
+          { slot: 'weighted_compound', reps: 15 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'cardio',           reps: 10 },
+        ] },
+      { title: 'AMRAP 12 min',                      slots: [
+          { slot: 'weighted_compound', reps: 6 },
+          { slot: 'weighted_compound', reps: 8 },
+          { slot: 'weighted_carry',   reps: 10 },
+        ] },
+    ],
+  },
+  long_workout: {
+    name: 'Long Workout',
+    wods: [
+      { title: '5 Rounds For Time (30 min cap)',    slots: [
+          { slot: 'cardio',           reps: 20 },
+          { slot: 'ball',             reps: 20 },
+          { slot: 'weighted_compound', reps: 12 },
+          { slot: 'jump',             reps: 12 },
+        ] },
+      { title: '30-60-90 Reps (35 min cap)',        slots: [
+          { slot: 'cardio' },
+          { slot: 'ball' },
+          { slot: 'weighted_compound' },
+          { slot: 'jump' },
+        ] },
+      { title: '12 Rounds For Time (35 min cap)',   slots: [
+          { slot: 'cardio',           reps: 15 },
+          { slot: 'weighted_compound', reps: 12 },
+          { slot: 'weighted_compound', reps: 9 },
+          { slot: 'weighted_compound', reps: 6 },
+        ] },
+      { title: '21 Rounds For Time (40 min cap)',   slots: [
+          { slot: 'jump',             reps: 5 },
+          { slot: 'weighted_compound', reps: 5 },
+          { slot: 'gym_pull',         reps: 5 },
+        ] },
+      { title: '30 Rounds For Time (45 min cap)',   slots: [
+          { slot: 'core',             reps: 3 },
+          { slot: 'burpee',           reps: 3 },
+          { slot: 'weighted_compound', reps: 6 },
+        ], note: 'Long synchro-style chipper' },
+    ],
+  },
+  rest: {
+    name: 'Active Recovery',
+    blocks: [
+      { kind: 'recovery', title: '30–40 min easy', text: 'Easy walk, bike, or mobility flow. Pain-free range only.' },
+    ],
+  },
+};
+
+/* PHASE LOADING — % of 1RM by phase (return-plan) */
+const PHASE_PCT = {
+  1: { lo: 50, hi: 55 },
+  2: { lo: 60, hi: 65 },
+  3: { lo: 65, hi: 70 },
+  4: { lo: 75, hi: 80 },
+};
+const PHASE_NAMES = {
+  1: 'Phase 1 — Re-Entry',
+  2: 'Phase 2 — Build',
+  3: 'Phase 3 — Match Source',
+  4: 'Phase 4 — Original Loading',
+};
+
+/* =========================================================
+   STATE + persistence
+   ========================================================= */
+const LS_KEY = 'train_state_v1';
+const defaultState = () => ({
+  onboarded: false,
+  equipment: [],
+  injuries: [],
+  blacklist: [],
+  oneRMs: { backSquat: null, frontSquat: null, bench: null, deadlift: null, clean: null, snatch: null, pushPress: null },
+  startDate: null, // ISO date string
+  currentPhase: 1,
+  autoPhase: true,
+  rotation: [...DEFAULT_ROTATION], // ordered list of session type ids
+  cyclePosition: 0,                // index into rotation — what's "today"
+  sessions: [],                    // {date, sessionType, name, ...}
+  todayDraft: null,                // generated session, regenerated when stale
+  customWorkouts: [],              // user-built workouts {id, name, sessionType, strength, wod{title,format,items}}
+  builderDraft: null,              // in-progress workout being edited in the builder
+  weekHistory: [],                 // [{date, sessionType, wodIndex}] — last 7 days of sessions
+  chosenForToday: null,            // { sessionType, wodIndex } if user manually picked
+  useRecommendations: true,        // false = picker shown by default, no auto-recommend
+  showScaled: false,               // when true, render the scaled version of movements w/ a SCALES chain
+  scaleLevels: {},                 // { movementId: levelIdx } — 0 = RX, 1 = first scale, 2 = second, ...
+  workoutsTab: 'recommended',      // 'recommended' | 'mine'
+  view: 'today',
+});
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return defaultState();
+    const parsed = JSON.parse(raw);
+    const merged = { ...defaultState(), ...parsed };
+    // Make sure all 1RM keys exist; migrate legacy hangClean → clean
+    merged.oneRMs = { ...defaultState().oneRMs, ...(merged.oneRMs || {}) };
+    if (parsed.oneRMs && parsed.oneRMs.hangClean != null && merged.oneRMs.clean == null) {
+      merged.oneRMs.clean = parsed.oneRMs.hangClean;
+    }
+    return merged;
+  } catch (e) {
+    return defaultState();
+  }
+}
+function saveState() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch {}
+}
+
+/* =========================================================
+   GENERATOR
+   ========================================================= */
+function isMovementUsable(m) {
+  // equipment: must have ALL required (empty array = bodyweight = always OK)
+  for (const eq of m.equipment) if (!state.equipment.includes(eq)) return false;
+  // equipmentAny: must have AT LEAST ONE of these (used for "treadmill OR outdoor")
+  if (m.equipmentAny && m.equipmentAny.length) {
+    if (!m.equipmentAny.some(eq => state.equipment.includes(eq))) return false;
+  }
+  // injuries: skip if loads any injured part
+  for (const part of (m.loads || [])) if (state.injuries.includes(part)) return false;
+  // blacklist
+  if (state.blacklist.includes(m.id)) return false;
+  return true;
+}
+function pickFromSlot(slotId, used) {
+  const pool = MOVEMENTS.filter(m => m.slot === slotId && isMovementUsable(m));
+  if (pool.length === 0) return null;
+  // prefer ones not already used in this session
+  const fresh = pool.filter(m => !used.has(m.id));
+  const choice = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length ? fresh.length : pool.length))];
+  used.add(choice.id);
+  return choice;
+}
+function getCurrentPhase() {
+  if (!state.autoPhase) return state.currentPhase;
+  if (!state.startDate) return 1;
+  const start = new Date(state.startDate);
+  const now = new Date();
+  const weeks = Math.floor((now - start) / (1000 * 60 * 60 * 24 * 7));
+  if (weeks < 2) return 1;
+  if (weeks < 4) return 2;
+  if (weeks < 6) return 3;
+  return 4;
+}
+function pctForLift(slotId, phase) {
+  const p = PHASE_PCT[phase];
+  // squat/bench tend to use the higher end; clean a touch lower — keep it simple
+  return Math.round((p.lo + p.hi) / 2);
+}
+function weightFromRM(rmKg, pct) {
+  if (!rmKg) return null;
+  // round to nearest 2.5kg
+  const w = (rmKg * pct) / 100;
+  return Math.round(w / 2.5) * 2.5;
+}
+
+/* WOD prescribed loading (RX, men's). Phase factor scales it down during return phases. */
+const WOD_RX = {
+  // Barbell weighted compound
+  thruster: { kg: 50 }, front_squat: { kg: 80 }, oh_squat: { kg: 50 },
+  snatch: { kg: 40 }, power_snatch: { kg: 40 }, hang_snatch: { kg: 40 }, hang_power_snatch: { kg: 40 },
+  sto_bb: { kg: 60 }, push_press: { kg: 60 }, push_jerk: { kg: 60 }, split_jerk: { kg: 60 },
+  deadlift: { kg: 100 }, sumo_dl: { kg: 100 }, rdl: { kg: 80 }, good_morning: { kg: 40 },
+  burpee_dl: { kg: 60 }, bar_facing_burpee: { kg: 60 },
+  br_lunge: { kg: 60 }, fr_lunge: { kg: 60 }, reverse_br_lunge: { kg: 60 },
+  power_clean: { kg: 60 }, squat_clean: { kg: 60 }, hang_squat_clean: { kg: 60 }, clean_jerk: { kg: 60 },
+  // Dumbbell (per-hand for pair; same number for SA)
+  db_thruster: { kg: 22.5 }, db_snatch: { kg: 22.5 }, db_cj: { kg: 22.5 },
+  db_push_press: { kg: 22.5 }, db_push_jerk: { kg: 22.5 }, db_sto: { kg: 22.5 }, db_dl: { kg: 22.5 },
+  devil_press: { kg: 22.5 }, sa_devil_press: { kg: 22.5 }, man_makers: { kg: 22.5 },
+  db_lunge: { kg: 22.5 }, db_oh_lunge: { kg: 22.5 }, sa_db_oh_lunge: { kg: 22.5 },
+  db_step_up: { kg: 22.5 }, farmer_db: { kg: 22.5 },
+  db_floor_press: { kg: 22.5 }, db_back_squat: { kg: 22.5 }, db_front_squat: { kg: 22.5 },
+  db_bench: { kg: 22.5 }, db_hang_clean: { kg: 22.5 },
+  // Kettlebell
+  kb_swing: { kg: 24 }, sa_kb_swing: { kg: 24 }, kb_snatch: { kg: 24 },
+  kb_cj: { kg: 24 }, kb_thruster: { kg: 24 }, kb_clean: { kg: 24 },
+  goblet_lunge: { kg: 16 }, goblet_squat: { kg: 16 },
+  kb_lunge: { kg: 24 }, kb_step_up: { kg: 24 }, farmer_kb: { kg: 24 }, sa_kb_carry: { kg: 24 },
+  // Sandbag
+  sandbag_clean: { kg: 80 }, sandbag_dl: { kg: 100 }, sandbag_cp: { kg: 60 }, sandbag_carry: { kg: 80 },
+  // Box height (no weight)
+  box_jump: { in: 24 }, box_jump_over: { in: 24 }, step_up: { in: 24 },
+  burpee_box: { in: 24 }, burpee_box_over: { in: 24 },
+  // Wall ball — weight + target
+  wall_ball: { kg: 9, target: '10ft' },
+  // Strict press family
+  strict_press:    { kg: 40 },
+  db_strict_press: { kg: 22.5 },
+  sa_db_press:     { kg: 22.5 },
+  kb_strict_press: { kg: 24 },
+  // Rows
+  bb_row:          { kg: 60 },
+  pendlay_row:     { kg: 60 },
+  db_row:          { kg: 22.5 },
+  sa_db_row:       { kg: 22.5 },
+  renegade_row:    { kg: 22.5 },
+  // Hinge
+  hip_thrust:      { kg: 80 },
+  sl_dl:           { kg: 22.5 },
+  // Olympic / complex
+  bear_complex:    { kg: 40 },
+  tgu:             { kg: 24 },
+  // Med ball
+  mb_clean:        { kg: 9 },
+  mb_slam:         { kg: 9 },
+  mb_twist:        { kg: 6 },
+  // Bulgarian split squat
+  bulgarian_ss:    { kg: 22.5 },
+  // Burpee variant
+  burpee_over_db:  { kg: 22.5 },
+};
+
+/* Phase factors — re-entry uses lighter loads & lower volume; full RX from phase 3. */
+const PHASE_RX_FACTOR  = { 1: 0.65, 2: 0.80, 3: 0.95, 4: 1.0 };
+const PHASE_REP_FACTOR = { 1: 0.60, 2: 0.80, 3: 0.95, 4: 1.0 };
+
+/* Per-movement WOD prescription: (1RM rmKey) × (pct of that 1RM at full RX).
+   When the user has entered the 1RM, we use this. Otherwise fall back to WOD_RX.
+   Both paths get scaled down by PHASE_RX_FACTOR during the return phases. */
+const WOD_PCT = {
+  // Squat / squat-derived
+  back_squat:        { rmKey: 'backSquat',  pct: 65 },
+  front_squat:       { rmKey: 'frontSquat', pct: 70 },
+  oh_squat:          { rmKey: 'snatch',     pct: 60 },
+  br_lunge:          { rmKey: 'backSquat',  pct: 35 },
+  fr_lunge:          { rmKey: 'frontSquat', pct: 35 },
+  reverse_br_lunge:  { rmKey: 'backSquat',  pct: 35 },
+  good_morning:      { rmKey: 'backSquat',  pct: 25 },
+  // Bench
+  bench_press:       { rmKey: 'bench',      pct: 65 },
+  floor_press:       { rmKey: 'bench',      pct: 60 },
+  // Snatch family
+  snatch:            { rmKey: 'snatch',     pct: 65 },
+  power_snatch:      { rmKey: 'snatch',     pct: 65 },
+  hang_snatch:       { rmKey: 'snatch',     pct: 60 },
+  hang_power_snatch: { rmKey: 'snatch',     pct: 55 },
+  // Clean family + thruster (front-rack)
+  hang_clean:        { rmKey: 'clean',      pct: 60 },
+  power_clean:       { rmKey: 'clean',      pct: 65 },
+  squat_clean:       { rmKey: 'clean',      pct: 65 },
+  hang_squat_clean:  { rmKey: 'clean',      pct: 60 },
+  clean_jerk:        { rmKey: 'clean',      pct: 60 },
+  thruster:          { rmKey: 'clean',      pct: 50 },
+  // Press / jerk
+  sto_bb:            { rmKey: 'pushPress',  pct: 65 },
+  push_press:        { rmKey: 'pushPress',  pct: 70 },
+  push_jerk:         { rmKey: 'pushPress',  pct: 80 },
+  split_jerk:        { rmKey: 'pushPress',  pct: 85 },
+  // Deadlift family
+  deadlift:          { rmKey: 'deadlift',   pct: 55 },
+  sumo_dl:           { rmKey: 'deadlift',   pct: 55 },
+  rdl:               { rmKey: 'deadlift',   pct: 50 },
+  burpee_dl:         { rmKey: 'deadlift',   pct: 50 },
+  bar_facing_burpee: { rmKey: 'deadlift',   pct: 50 },
+  // Strict press (about 60% of push press)
+  strict_press:      { rmKey: 'pushPress',  pct: 60 },
+  // Bent-over rows
+  bb_row:            { rmKey: 'deadlift',   pct: 40 },
+  pendlay_row:       { rmKey: 'deadlift',   pct: 40 },
+  // Hip thrust
+  hip_thrust:        { rmKey: 'deadlift',   pct: 80 },
+  // Bear complex (caps at clean ability)
+  bear_complex:      { rmKey: 'clean',      pct: 50 },
+};
+
+function rxFor(movementId, phase) {
+  const factor = PHASE_RX_FACTOR[phase] || 1.0;
+  // 1RM-based weight if available
+  const map = WOD_PCT[movementId];
+  if (map && state.oneRMs && state.oneRMs[map.rmKey]) {
+    const rm = state.oneRMs[map.rmKey];
+    const w = Math.round((rm * map.pct / 100 * factor) / 2.5) * 2.5;
+    return `${w}kg`;
+  }
+  // fallback to fixed RX
+  const rx = WOD_RX[movementId];
+  if (!rx) return null;
+  const parts = [];
+  if (rx.kg !== undefined) {
+    const w = Math.round((rx.kg * factor) / 2.5) * 2.5;
+    parts.push(`${w}kg`);
+  }
+  if (rx.in !== undefined) parts.push(`${rx.in}"`);
+  if (rx.target) parts.push(rx.target);
+  return parts.length ? parts.join(' / ') : null;
+}
+
+/* Convert a base rep number into a movement-appropriate label. */
+function repsLabel(movement, baseReps, phase) {
+  if (!movement || baseReps == null) return null;
+  const factor = PHASE_REP_FACTOR[phase] || 1.0;
+  const r = Math.max(1, Math.round(baseReps * factor));
+  const id = movement.id;
+  if (movement.slot === 'cardio') {
+    if (id === 'row' || id === 'bike' || id === 'ski')         return `${r} cal`;
+    if (id === 'run')                                          return `${Math.round(r * 25 / 50) * 50}m`;
+    if (id === 'shuttle')                                      return `${Math.max(1, Math.round(r/2))} shuttle`;
+    if (id === 'du' || id === 'crossover_du')                  return `${r * 3} reps`;
+    if (id === 'su')                                           return `${r * 8} reps`;
+    return `${r} cal`;
+  }
+  return `${r} reps`;
+}
+
+/* Scaling chains — RX → easier → easiest. Generator surfaces the first
+   alternative the user can actually do (passes equipment + injury filter). */
+const SCALES = {
+  // Pull-ups family (hardest → easiest)
+  bmu:            ['c2b','pull_up','jumping_pull_up','ring_row'],
+  rmu:            ['low_ring_mu','ring_pull','ring_row'],
+  c2b:            ['pull_up','jumping_pull_up','ring_row'],
+  pull_up:        ['jumping_pull_up','ring_row'],
+  strict_pull_up: ['pull_up','jumping_pull_up','ring_row'],
+  chin_up:        ['jumping_pull_up','ring_row'],
+  pull_over:      ['pull_up','jumping_pull_up'],
+  // HSPU family
+  shspu:          ['kipping_hspu','wf_shspu','pike_pushup_box','pike_pushup','pushup'],
+  wf_shspu:       ['kipping_hspu','pike_pushup_box','pike_pushup','pushup'],
+  kipping_hspu:   ['pike_pushup_box','pike_pushup','pushup'],
+  pike_pushup:    ['pushup'],
+  pike_pushup_box:['pike_pushup','pushup'],
+  ring_dip:       ['box_dip','bench_dip'],
+  // HSW / wall walks
+  handstand_walk: ['shoulder_taps_hs','wall_walk','half_wall_walk'],
+  wall_walk:      ['half_wall_walk'],
+  shoulder_taps_hs:['half_wall_walk'],
+  // Lower-body skill
+  pistol:         ['box_pistol','skater_squat'],
+  legless_rope:   ['rope_climb','lay_to_stand'],
+  rope_climb:     ['lay_to_stand'],
+  // Core hanging
+  ttb:            ['kte','ktc','hkr','sit_up'],
+  kte:            ['ktc','hkr'],
+  ktc:            ['hkr','sit_up'],
+  ttr:            ['ttb','kte','ktc'],
+  // Skip
+  du:             ['su'],
+  crossover_du:   ['du','su'],
+  // Burpees with skill
+  burpee_pullup:  ['burpee','jumping_pull_up'],
+  burpee_box:     ['burpee','step_up'],
+  burpee_box_over:['burpee_box','burpee'],
+  bar_facing_burpee:['burpee'],
+  burpee_over_db: ['burpee'],
+  // New push variants
+  hrpu:           ['pushup'],
+  diamond_pushup: ['pushup'],
+  bar_dip:        ['box_dip','bench_dip'],
+  // New pull/row variants
+  renegade_row:   ['db_row','sa_db_row','plank'],
+  db_row:         ['ring_row'],
+  pendlay_row:    ['db_row','ring_row'],
+  bb_row:         ['db_row','ring_row'],
+  strict_ttb:     ['ttb','kte','ktc'],
+  // Wall climb scales to wall walk
+  wall_climb:     ['wall_walk','half_wall_walk'],
+  // Olympic complexes scale to simpler
+  bear_complex:   ['power_clean','thruster'],
+  tgu:            ['kb_swing','goblet_squat'],
+  // Strict press scales to push variant
+  strict_press:   ['push_press','pushup'],
+  db_strict_press:['db_push_press','pushup'],
+  // Single-leg DL scales to bilateral
+  sl_dl:          ['db_dl','rdl'],
+  // GHD scales to AbMat
+  ghd_situp:      ['sit_up'],
+  ghd_back_ext:   ['glute_bridge'],
+  // Med ball
+  mb_clean:       ['db_hang_clean','kb_clean'],
+  mb_slam:        ['kb_swing'],
+  // Air squat (already easy, no scale)
+  // Bulgarian split squat
+  bulgarian_ss:   ['db_lunge','goblet_lunge'],
+};
+
+/* If "Show scaled" is on AND user has set a level for this movement,
+   return the scaled-to-user-level substitution. Otherwise return the original. */
+function applyUserScale(movement) {
+  if (!movement) return movement;
+  if (!state.showScaled) return movement;
+  const lvl = (state.scaleLevels && state.scaleLevels[movement.id]) | 0;
+  if (lvl <= 0) return movement;
+  const chain = SCALES[movement.id];
+  if (!chain || !chain[lvl - 1]) return movement;
+  const scaled = MOVEMENTS.find(m => m.id === chain[lvl - 1]);
+  return scaled || movement;
+}
+
+function pickScale(movement) {
+  if (!movement) return null;
+  const chain = SCALES[movement.id];
+  if (!chain) return null;
+  for (const scaleId of chain) {
+    const s = MOVEMENTS.find(x => x.id === scaleId);
+    if (s && isMovementUsable(s) && s.id !== movement.id) return s;
+  }
+  return null;
+}
+function generateSession(sessionType, opts = {}) {
+  const tmpl = TEMPLATES[sessionType];
+  if (!tmpl) return null;
+  const phase = getCurrentPhase();
+  const used = new Set();
+  const blocks = [];
+
+  // Legacy "blocks" path (rest day)
+  if (tmpl.blocks) {
+    tmpl.blocks.forEach(block => {
+      if (block.kind === 'recovery') {
+        blocks.push({ kind: 'recovery', title: block.title, text: block.text });
+      }
+    });
+    return { date: new Date().toISOString().slice(0,10), sessionType, name: tmpl.name, phase, blocks, wodIdx: null };
+  }
+
+  // Force a specific pairing (wod index) when requested
+  if (typeof opts.wodIndex === 'number' && tmpl.wods && tmpl.wods[opts.wodIndex]) {
+    opts = { ...opts, fixedWodIdx: opts.wodIndex };
+  }
+
+  // Strength block (named lift OR a fixed scheme like core/gymnastic EMOM)
+  if (tmpl.strength) {
+    if (tmpl.strength.slot) {
+      let m = pickFromSlot(tmpl.strength.slot, used);
+      m = applyUserScale(m);
+      if (m) {
+        const pct = pctForLift(tmpl.strength.slot, phase);
+        const rm = m.rmKey ? state.oneRMs[m.rmKey] : null;
+        const wt = weightFromRM(rm, pct);
+        const scheme = tmpl.strength.scheme.replace('{pct}', pct);
+        blocks.push({ kind: 'strength', name: m.name, mid: m.id, scheme, pct, weight: wt });
+      } else {
+        blocks.push({ kind: 'note', title: 'Strength', text: 'No movement available — check equipment in Settings.' });
+      }
+    } else {
+      blocks.push({ kind: 'strength', name: 'Skill / Primer', mid: null, scheme: tmpl.strength.scheme, pct: null, weight: null });
+    }
+  }
+
+  // WOD: pick a format from the pool (avoid repeating previous when re-rolling)
+  let wodIdx = 0;
+  if (tmpl.wods && tmpl.wods.length) {
+    if (typeof opts.fixedWodIdx === 'number') {
+      wodIdx = opts.fixedWodIdx;
+    } else {
+      const choices = tmpl.wods.map((_, i) => i);
+      let pool = choices;
+      if (typeof opts.avoidWodIdx === 'number' && tmpl.wods.length > 1) {
+        pool = choices.filter(i => i !== opts.avoidWodIdx);
+      }
+      wodIdx = pool[Math.floor(Math.random() * pool.length)];
+    }
+    const w = tmpl.wods[wodIdx];
+    const items = [];
+    for (const sRaw of w.slots) {
+      const s = (typeof sRaw === 'string') ? { slot: sRaw } : sRaw;
+      // Explicit rest slot in EMOMs
+      if (s.slot === 'rest') { items.push({ name: 'Rest', isRest: true }); continue; }
+      let m = pickFromSlot(s.slot, used);
+      m = applyUserScale(m);
+      if (!m) { items.push({ name: '— (none available)' }); continue; }
+      const reps = (s.reps != null) ? repsLabel(m, s.reps, phase) : null;
+      const scale = pickScale(m);
+      items.push({
+        name: m.name,
+        mid: m.id,
+        rx: rxFor(m.id, phase),
+        reps,
+        scaleName: scale ? scale.name : null,
+        scaleMid:  scale ? scale.id   : null,
+        scaleRx:   scale ? rxFor(scale.id, phase) : null,
+      });
+    }
+    blocks.push({ kind: 'wod', title: w.title, items, note: w.note || '' });
+  }
+
+  return {
+    date: new Date().toISOString().slice(0, 10),
+    sessionType,
+    name: tmpl.name,
+    phase,
+    blocks,
+    wodIdx,
+  };
+}
+
+/* Pairing helpers — a "pairing" = (sessionType, wodIndex) tuple */
+function allPairings() {
+  const out = [];
+  Object.keys(TEMPLATES).forEach(stype => {
+    const t = TEMPLATES[stype];
+    if (t.wods && t.wods.length) {
+      t.wods.forEach((w, i) => out.push({ sessionType: stype, wodIndex: i, name: t.name, title: w.title }));
+    } else if (t.blocks) {
+      out.push({ sessionType: stype, wodIndex: 0, name: t.name, title: '(no WOD)' });
+    }
+  });
+  return out;
+}
+function sessionTypesDoneThisWeek() {
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const set = new Set();
+  (state.weekHistory || []).forEach(h => {
+    if (new Date(h.date).getTime() >= cutoff) set.add(h.sessionType);
+  });
+  return set;
+}
+function pairingId(sessionType, wodIndex) { return `${sessionType}:${wodIndex}`; }
+
+/* Rotation helpers */
+function currentSessionType() {
+  if (!state.rotation || !state.rotation.length) state.rotation = [...DEFAULT_ROTATION];
+  if (state.cyclePosition >= state.rotation.length) state.cyclePosition = 0;
+  return state.rotation[state.cyclePosition];
+}
+function advanceCycle() {
+  state.cyclePosition = (state.cyclePosition + 1) % state.rotation.length;
+  state.todayDraft = null;
+  saveState();
+}
+function setSessionForToday(sessionTypeId) {
+  const idx = state.rotation.indexOf(sessionTypeId);
+  if (idx >= 0) state.cyclePosition = idx;
+  state.todayDraft = null;
+  saveState();
+}
+
+/* =========================================================
+   RENDER — onboarding
+   ========================================================= */
+function renderOnboarding() {
+  // Equipment groups
+  const groups = ['barbell','freeweights','gymnastic','cardio','other'];
+  for (const g of groups) {
+    const el = document.querySelector(`[data-eq-group="${g}"]`);
+    el.innerHTML = '';
+    EQUIPMENT.filter(e => e.group === g).forEach(e => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (state.equipment.includes(e.id) ? ' on' : '');
+      b.textContent = e.label;
+      b.onclick = () => {
+        const i = state.equipment.indexOf(e.id);
+        if (i >= 0) state.equipment.splice(i, 1); else state.equipment.push(e.id);
+        b.classList.toggle('on');
+      };
+      el.appendChild(b);
+    });
+  }
+  // Injuries
+  const inj = document.getElementById('injury-chips');
+  inj.innerHTML = '';
+  BODY_PARTS.forEach(p => {
+    const b = document.createElement('button');
+    b.className = 'chip danger' + (state.injuries.includes(p.id) ? ' on' : '');
+    b.textContent = p.label;
+    b.onclick = () => {
+      const i = state.injuries.indexOf(p.id);
+      if (i >= 0) state.injuries.splice(i, 1); else state.injuries.push(p.id);
+      b.classList.toggle('on');
+    };
+    inj.appendChild(b);
+  });
+  // 1RMs
+  const rmFields = [
+    ['rm-bs',    'backSquat'],
+    ['rm-fs',    'frontSquat'],
+    ['rm-bench', 'bench'],
+    ['rm-dl',    'deadlift'],
+    ['rm-cl',    'clean'],
+    ['rm-sn',    'snatch'],
+    ['rm-pp',    'pushPress'],
+  ];
+  rmFields.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = state.oneRMs[key] || '';
+  });
+
+  document.getElementById('onboarding-done').onclick = () => {
+    rmFields.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el) state.oneRMs[key] = parseFloat(el.value) || null;
+    });
+    state.onboarded = true;
+    state.startDate = state.startDate || new Date().toISOString().slice(0,10);
+    saveState();
+    setView('today');
+  };
+}
+
+/* =========================================================
+   RENDER — today
+   ========================================================= */
+function renderToday() {
+  const el = document.getElementById('today-content');
+  const phase = getCurrentPhase();
+  const today = new Date();
+  const dateStr = today.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+
+  // If user has a manual pick, that wins. Otherwise honor the rotation (if recommendations are on)
+  // or show the picker (if off).
+  if (!state.useRecommendations && !state.chosenForToday) {
+    return renderPicker();
+  }
+
+  let sessionType, wodIndex;
+  if (state.chosenForToday) {
+    sessionType = state.chosenForToday.sessionType;
+    wodIndex = state.chosenForToday.wodIndex;
+  } else {
+    sessionType = currentSessionType();
+    wodIndex = null; // will be randomly picked by generator
+  }
+
+  const todayKey = today.toISOString().slice(0, 10);
+  const draftStale = !state.todayDraft
+                  || state.todayDraft.sessionType !== sessionType
+                  || state.todayDraft.date !== todayKey
+                  || (wodIndex != null && state.todayDraft.wodIdx !== wodIndex);
+  if (draftStale) {
+    state.todayDraft = generateSession(sessionType, wodIndex != null ? { wodIndex } : {});
+    saveState();
+  }
+  const session = state.todayDraft;
+
+  // Cycle strip — generic "Day N", with what was done from this week's history
+  const cycleLen = (state.rotation && state.rotation.length) || 7;
+  const pos = state.cyclePosition % cycleLen;
+  // Map this-week history to day positions: each logged session fills one slot in order
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recent = (state.weekHistory || [])
+    .filter(h => new Date(h.date).getTime() >= cutoff)
+    .slice(-cycleLen);
+  // recent[0] → Day 1, recent[1] → Day 2, etc.; pos = next-up day
+  const stripHtml = Array.from({ length: cycleLen }, (_, i) => {
+    const past = recent[i];
+    const tmpl = past ? TEMPLATES[past.sessionType] : null;
+    const wodTitle = (past && tmpl && tmpl.wods && tmpl.wods[past.wodIndex]) ? tmpl.wods[past.wodIndex].title : '';
+    const isDone = !!past;
+    const isCurrent = i === recent.length;
+    const cls = isCurrent ? 'on' : (isDone ? '' : '');
+    const sub = past ? (tmpl ? tmpl.name : past.sessionType) : (isCurrent ? 'today' : '—');
+    return `
+      <div class="chip ${cls}" style="display:flex;flex-direction:column;align-items:center;min-width:64px;${isDone ? 'opacity:0.7' : ''}">
+        <div style="font-weight:600">Day ${i+1}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px;line-height:1.2;text-align:center">${sub}</div>
+      </div>
+    `;
+  }).join('');
+
+  const warmup = WARMUPS[sessionType];
+  const cooldown = COOLDOWNS[sessionType];
+  const renderList = (block) => block ? `
+    <div class="card">
+      <div class="label">${block.title}</div>
+      <div class="body"><ul>${block.items.map(it => `<li>${it}</li>`).join('')}</ul></div>
+    </div>` : '';
+
+  let html = `
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <div>
+        <div style="font-size:13px;color:var(--muted)">${dateStr} • Day ${recent.length + 1} of ${cycleLen}</div>
+        <h2 style="margin:2px 0 0">${session.name}</h2>
+      </div>
+      <span class="pill warn">${PHASE_NAMES[phase]}</span>
+    </div>
+    <div class="card" style="padding:10px 12px">
+      <div class="label">Cycle</div>
+      <div class="chips" style="margin-top:6px">${stripHtml}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Each completed session fills the next day. Once a session type is done this week it's blocked from the picker.</div>
+    </div>
+    ${renderList(warmup)}
+  `;
+
+  session.blocks.forEach((b) => {
+    if (b.kind === 'strength') {
+      const wtTxt = b.weight ? `<strong>${b.weight} kg</strong> (${b.pct}%)` : `${b.pct}%`;
+      html += `
+        <div class="card">
+          <div class="label">Strength</div>
+          <div class="title">${b.name}</div>
+          <div class="body">
+            <div>${b.scheme}</div>
+            <div style="margin-top:6px">Working weight: ${wtTxt}</div>
+          </div>
+        </div>`;
+    } else if (b.kind === 'wod') {
+      const renderItem = it => {
+        if (it.isRest) return `<li><em style="color:var(--muted)">Rest</em></li>`;
+        const repsTxt = it.reps ? `<strong>${it.reps}</strong> ` : '';
+        const rxTxt   = it.rx   ? ` — <strong>${it.rx}</strong>` : '';
+        const scale   = it.scaleName
+          ? `<div style="color:var(--muted);font-size:12px;margin-left:2px">↳ scale: ${it.reps ? it.reps + ' ' : ''}${it.scaleName}${it.scaleRx ? ` (${it.scaleRx})` : ''}</div>`
+          : '';
+        return `<li>${repsTxt}${it.name}${rxTxt}${scale}</li>`;
+      };
+      html += `
+        <div class="card">
+          <div class="label">${b.title}</div>
+          <div class="body">
+            <ul>${b.items.map(renderItem).join('')}</ul>
+            ${b.note ? `<div style="color:var(--muted);font-size:13px">${b.note}</div>` : ''}
+          </div>
+        </div>`;
+    } else if (b.kind === 'recovery') {
+      html += `
+        <div class="card">
+          <div class="label">Recovery</div>
+          <div class="title">${b.title}</div>
+          <div class="body">${b.text}</div>
+        </div>`;
+    } else if (b.kind === 'note') {
+      html += `<div class="card"><div class="title">${b.title}</div><div class="body">${b.text}</div></div>`;
+    }
+  });
+
+  html += renderList(cooldown);
+
+  // Movement reference — images + demo video link for each unique movement
+  const refSet = new Set();
+  const refList = []; // [{id, name}]
+  const addRef = (id, name) => {
+    if (!name || refSet.has(name) || name.startsWith('—')) return;
+    refSet.add(name);
+    refList.push({ id, name });
+  };
+  session.blocks.forEach(b => {
+    if (b.kind === 'strength') addRef(b.mid, b.name);
+    if (b.kind === 'wod') b.items.forEach(it => {
+      if (!it.isRest) {
+        addRef(it.mid, it.name);
+        addRef(it.scaleMid, it.scaleName);
+      }
+    });
+  });
+  if (refList.length) {
+    const gridHtml = refList.map(({ id, name }) => `
+      <div class="mov-item">
+        <img src="images/${encodeURIComponent(name)}.png" alt="${name}"
+             onerror="this.parentElement.classList.add('no-image'); this.outerHTML = '<div class=&quot;mov-thumb&quot;>image soon</div>';">
+        <div class="mov-name">${name}</div>
+      </div>
+    `).join('');
+    html += `
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <div class="label" style="margin:0">Movement reference (${refList.length})</div>
+          <button class="btn secondary small" id="ref-toggle">Show</button>
+        </div>
+        <div id="ref-body" style="display:none;margin-top:10px">
+          <div class="mov-grid">${gridHtml}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  html += `
+    <div class="row" style="margin-top:16px">
+      <button class="btn small" id="start-session">▶ Start guided session</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn secondary small" id="reroll">↻ Re-roll</button>
+      <button class="btn secondary small" id="choose-pairing">Choose different →</button>
+      <button class="btn secondary small" id="skip-day">Skip → next</button>
+      <button class="btn secondary small" id="start-log">Log without timer</button>
+    </div>
+  `;
+  el.innerHTML = html;
+
+  document.getElementById('reroll').onclick = () => {
+    const prev = state.todayDraft && typeof state.todayDraft.wodIdx === 'number' ? state.todayDraft.wodIdx : null;
+    state.todayDraft = generateSession(sessionType, prev !== null ? { avoidWodIdx: prev } : {});
+    saveState();
+    renderToday();
+  };
+  document.getElementById('skip-day').onclick = () => {
+    advanceCycle();
+    renderToday();
+  };
+  document.getElementById('start-log').onclick = () => {
+    openLogger(session);
+  };
+  document.getElementById('start-session').onclick = () => {
+    startPlayer(session);
+  };
+  document.getElementById('choose-pairing').onclick = () => setView('build');
+  const refToggle = document.getElementById('ref-toggle');
+  if (refToggle) {
+    refToggle.onclick = () => {
+      const body = document.getElementById('ref-body');
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : '';
+      refToggle.textContent = open ? 'Show' : 'Hide';
+    };
+  }
+}
+
+/* Pairing picker — list every (sessionType, wodIndex) pairing, mark
+   sessionTypes that already happened in the last 7 days as disabled. */
+function renderPicker() {
+  const el = document.getElementById('today-content');
+  const done = sessionTypesDoneThisWeek();
+  const pairings = allPairings();
+
+  // Group by session type for easier scanning
+  const grouped = {};
+  pairings.forEach(p => {
+    grouped[p.sessionType] = grouped[p.sessionType] || { name: p.name, items: [] };
+    grouped[p.sessionType].items.push(p);
+  });
+
+  let html = `
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h2 style="margin:0">Choose today's session</h2>
+      ${state.useRecommendations ? `<button class="btn secondary small" id="back-to-rec">← Recommended</button>` : ''}
+    </div>
+    <p style="color:var(--muted);font-size:13px">Pairings of session types you've already done this week are dimmed.</p>
+  `;
+
+  Object.keys(grouped).forEach(stype => {
+    const g = grouped[stype];
+    const blocked = done.has(stype);
+    html += `
+      <div class="card" style="${blocked ? 'opacity:0.5' : ''}">
+        <div class="title">${g.name}${blocked ? ' <span class="pill">done this week</span>' : ''}</div>
+        <div class="body">
+          ${g.items.map(p => `
+            <button class="btn ${blocked ? 'secondary' : ''} small" data-pair-st="${p.sessionType}" data-pair-wi="${p.wodIndex}" ${blocked ? 'disabled' : ''} style="margin:4px 4px 0 0">${p.title}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  el.innerHTML = html;
+
+  if (state.useRecommendations) {
+    document.getElementById('back-to-rec').onclick = () => {
+      state.chosenForToday = null;
+      state.todayDraft = null;
+      saveState();
+      renderToday();
+    };
+  }
+  el.querySelectorAll('[data-pair-st]').forEach(btn => {
+    btn.onclick = () => {
+      const stype = btn.dataset.pairSt;
+      const widx = parseInt(btn.dataset.pairWi, 10);
+      state.chosenForToday = { sessionType: stype, wodIndex: widx };
+      state.todayDraft = null;
+      saveState();
+      renderToday();
+    };
+  });
+}
+
+/* Logger overlay (very simple — saves a session entry) */
+function openLogger(session) {
+  const el = document.getElementById('today-content');
+  const movementsInSession = [];
+  session.blocks.forEach(b => {
+    if (b.kind === 'strength') movementsInSession.push({ id: b.mid, name: b.name, fields: ['weight','reps','notes'] });
+    if (b.kind === 'wod') b.items.forEach(it => { if (it.mid) movementsInSession.push({ id: it.mid, name: it.name, fields: ['weight','reps','notes'] }); });
+  });
+  let html = `<h2>Log: ${session.name}</h2>`;
+  html += `<div class="card"><div class="body">
+    <label>Total time / score</label>
+    <input type="text" id="log-score" placeholder="e.g. 14:32 or 5 rounds + 12">
+    <label>Overall RPE (1–10)</label>
+    <input type="number" id="log-rpe" inputmode="numeric" min="1" max="10">
+    <label>Session notes</label>
+    <textarea id="log-notes" placeholder="How did it feel?"></textarea>
+  </div></div>`;
+  movementsInSession.forEach((m, i) => {
+    html += `
+      <div class="card">
+        <div class="title">${m.name}</div>
+        <div class="body">
+          <div class="grid2">
+            <div><label>Weight (kg)</label><input type="number" inputmode="decimal" data-mlog="weight" data-mid="${m.id}" data-mname="${m.name}"></div>
+            <div><label>Reps / rounds</label><input type="text" data-mlog="reps" data-mid="${m.id}"></div>
+          </div>
+          <label>Notes</label>
+          <input type="text" data-mlog="notes" data-mid="${m.id}">
+        </div>
+      </div>`;
+  });
+  html += `
+    <div class="row">
+      <button class="btn secondary small" id="cancel-log">Cancel</button>
+      <button class="btn small" id="save-log">Save</button>
+    </div>`;
+  el.innerHTML = html;
+
+  document.getElementById('cancel-log').onclick = renderToday;
+  document.getElementById('save-log').onclick = () => {
+    const entry = {
+      date: session.date,
+      dayKey: session.dayKey,
+      name: session.name,
+      phase: session.phase,
+      score: document.getElementById('log-score').value,
+      rpe: document.getElementById('log-rpe').value,
+      notes: document.getElementById('log-notes').value,
+      movements: [],
+    };
+    movementsInSession.forEach(m => {
+      const w = document.querySelector(`[data-mlog="weight"][data-mid="${m.id}"]`).value;
+      const r = document.querySelector(`[data-mlog="reps"][data-mid="${m.id}"]`).value;
+      const n = document.querySelector(`[data-mlog="notes"][data-mid="${m.id}"]`).value;
+      if (w || r || n) entry.movements.push({ id: m.id, name: m.name, weight: w, reps: r, notes: n });
+    });
+    state.sessions.unshift(entry);
+    // Also record into weekHistory so this sessionType is filtered from the picker
+    state.weekHistory = (state.weekHistory || []).filter(h => {
+      const cutoff = Date.now() - 14 * 24 * 60 * 60 * 1000; // keep ~2 weeks
+      return new Date(h.date).getTime() >= cutoff;
+    });
+    state.weekHistory.push({
+      date: entry.date,
+      sessionType: session.sessionType,
+      wodIndex: session.wodIdx,
+    });
+    state.chosenForToday = null;
+    saveState();
+    setView('log');
+  };
+}
+
+/* =========================================================
+   SESSION PLAYER — guided run-through with timers
+   ========================================================= */
+let player = null;
+let playerInterval = null;
+
+/* Detect timer mode + cap from a WOD title. */
+function parseWodFormat(title) {
+  if (!title) return { mode: 'count_up', capSec: 20*60, label: 'For Time' };
+  const t = title.toLowerCase();
+  let m;
+  // EMOM N min
+  if ((m = t.match(/emom\s+(\d+)\s*min/))) {
+    const n = parseInt(m[1], 10);
+    return { mode: 'interval', intervalSec: 60, totalRounds: n, capSec: n*60, label: `EMOM ${n} min` };
+  }
+  // K × N min AMRAP
+  if ((m = t.match(/(\d+)\s*[×x]\s*(\d+)\s*min\s*amrap/))) {
+    const k = parseInt(m[1], 10), n = parseInt(m[2], 10);
+    return { mode: 'count_up', capSec: k*n*60 + (k-1)*120, label: `${k} × ${n} min AMRAP` };
+  }
+  // AMRAP N min
+  if ((m = t.match(/amrap\s+(\d+)\s*min/))) {
+    const n = parseInt(m[1], 10);
+    return { mode: 'count_down', capSec: n*60, label: `AMRAP ${n} min` };
+  }
+  // Every N min × K
+  if ((m = t.match(/every\s+(\d+)\s*min\s*[×x]\s*(\d+)/))) {
+    const n = parseInt(m[1], 10), k = parseInt(m[2], 10);
+    return { mode: 'interval', intervalSec: n*60, totalRounds: k, capSec: n*k*60, label: `Every ${n} min × ${k}` };
+  }
+  // X min cap / X min total
+  if ((m = t.match(/\((\d+)\s*min\s*(?:cap|total)\)/))) {
+    return { mode: 'count_up', capSec: parseInt(m[1], 10)*60, label: title };
+  }
+  return { mode: 'count_up', capSec: 20*60, label: title };
+}
+
+function fmtTime(s) {
+  if (s < 0) s = 0;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+}
+
+let _audioCtx = null;
+function beep(freq = 880, ms = 150) {
+  try {
+    if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = _audioCtx;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.connect(g); g.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(0, ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.01);
+    g.gain.linearRampToValueAtTime(0, ctx.currentTime + ms/1000);
+    osc.start();
+    osc.stop(ctx.currentTime + ms/1000);
+  } catch(e) {}
+}
+
+function startPlayer(session) {
+  const wodBlock = session.blocks.find(b => b.kind === 'wod');
+  // Custom workouts carry an explicit format spec; prefer it over title parsing.
+  let fmt;
+  if (session.customSpec) {
+    fmt = { ...session.customSpec, label: wodBlock ? wodBlock.title : 'WOD' };
+  } else {
+    fmt = wodBlock ? parseWodFormat(wodBlock.title) : { mode: 'count_up', capSec: 20*60, label: 'For Time' };
+  }
+  player = {
+    session,
+    fmt,
+    phase: 'warmup',     // warmup → strength → wod → cooldown → done
+    wodStart: null,
+    wodElapsed: 0,
+    paused: false,
+    finished: false,
+    lastBeepRound: 0,
+    capAlarmFired: false,
+  };
+  // Pre-init audio (Safari needs a user-gesture; this click counts)
+  try { if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+  setView('player');
+}
+
+function endPlayer() {
+  if (playerInterval) { clearInterval(playerInterval); playerInterval = null; }
+  player = null;
+  setView('today');
+}
+
+function advancePlayerPhase() {
+  if (!player) return;
+  const order = ['warmup','strength','wod','wod_done','cooldown','done'];
+  let idx = order.indexOf(player.phase);
+  if (idx < 0) idx = 0;
+  let next = idx + 1;
+  while (next < order.length) {
+    const p = order[next];
+    if (p === 'strength' && !player.session.blocks.find(b => b.kind === 'strength')) { next++; continue; }
+    if (p === 'wod' && !player.session.blocks.find(b => b.kind === 'wod')) { next++; continue; }
+    if (p === 'cooldown' && !COOLDOWNS[player.session.sessionType]) { next++; continue; }
+    if (p === 'warmup' && !WARMUPS[player.session.sessionType]) { next++; continue; }
+    break;
+  }
+  player.phase = order[next] || 'done';
+  if (player.phase === 'wod') {
+    player.wodStart = Date.now();
+    player.wodElapsed = 0;
+    player.paused = false;
+    player.lastBeepRound = 0;
+    player.capAlarmFired = false;
+    if (playerInterval) clearInterval(playerInterval);
+    playerInterval = setInterval(tickWod, 200);
+    beep(660, 200);
+  }
+  if (player.phase === 'done') {
+    if (playerInterval) { clearInterval(playerInterval); playerInterval = null; }
+    const s = player.session;
+    player = null;
+    setView('today');   // switch to Today first, then openLogger fills the content
+    openLogger(s);
+    return;
+  }
+  renderPlayer();
+}
+
+function tickWod() {
+  if (!player || player.phase !== 'wod') return;
+  if (player.paused) return;
+  player.wodElapsed = Math.floor((Date.now() - player.wodStart) / 1000);
+
+  if (player.fmt.mode === 'interval') {
+    const round = Math.floor(player.wodElapsed / player.fmt.intervalSec) + 1;
+    if (round > player.lastBeepRound && round <= player.fmt.totalRounds) {
+      beep(880, 150);
+      player.lastBeepRound = round;
+    }
+    if (player.wodElapsed >= player.fmt.capSec) {
+      beep(440, 600);
+      finishWod();
+      return;
+    }
+  } else if (player.fmt.mode === 'count_down') {
+    if (player.wodElapsed >= player.fmt.capSec) {
+      beep(440, 600);
+      finishWod();
+      return;
+    }
+  } else if (player.fmt.mode === 'count_up' && player.fmt.capSec) {
+    if (player.wodElapsed >= player.fmt.capSec && !player.capAlarmFired) {
+      beep(440, 600);
+      player.capAlarmFired = true;
+    }
+  }
+  // Light update — only the timer numbers, not full re-render
+  updateWodTimerDOM();
+}
+
+function finishWod() {
+  if (playerInterval) { clearInterval(playerInterval); playerInterval = null; }
+  // auto-advance to cooldown (or done if no cooldown)
+  player.phase = 'wod_done';
+  renderPlayer();
+}
+
+function pauseResume() {
+  if (!player || player.phase !== 'wod') return;
+  if (player.paused) {
+    player.wodStart = Date.now() - player.wodElapsed * 1000;
+    player.paused = false;
+    if (!playerInterval) playerInterval = setInterval(tickWod, 200);
+  } else {
+    player.paused = true;
+    if (playerInterval) { clearInterval(playerInterval); playerInterval = null; }
+  }
+  renderPlayer();
+}
+
+function updateWodTimerDOM() {
+  const big = document.getElementById('player-big-time');
+  const sub = document.getElementById('player-sub-time');
+  if (!big || !player) return;
+  const f = player.fmt;
+  if (f.mode === 'count_down') {
+    const rem = Math.max(0, f.capSec - player.wodElapsed);
+    big.textContent = fmtTime(rem);
+  } else {
+    big.textContent = fmtTime(player.wodElapsed);
+  }
+  if (sub) {
+    if (f.mode === 'interval') {
+      const round = Math.min(f.totalRounds, Math.floor(player.wodElapsed / f.intervalSec) + 1);
+      const intoRound = player.wodElapsed % f.intervalSec;
+      const remInRound = f.intervalSec - intoRound;
+      sub.textContent = `Round ${round} / ${f.totalRounds}  •  ${fmtTime(remInRound)} left`;
+    } else if (f.mode === 'count_down') {
+      sub.textContent = `Cap ${fmtTime(f.capSec)}`;
+    } else if (f.capSec) {
+      const overCap = player.wodElapsed > f.capSec;
+      sub.textContent = overCap ? `OVER CAP (${fmtTime(player.wodElapsed - f.capSec)})` : `Cap ${fmtTime(f.capSec)}`;
+      sub.style.color = overCap ? 'var(--danger)' : '';
+    }
+  }
+}
+
+function renderPlayer() {
+  if (!player) { setView('today'); return; }
+  const el = document.getElementById('player-content');
+  const session = player.session;
+  const phase = player.phase;
+  const sub = (phase === 'warmup') ? 'Warm-up'
+            : (phase === 'strength') ? 'Strength'
+            : (phase === 'wod') ? 'WOD'
+            : (phase === 'wod_done') ? 'WOD complete'
+            : (phase === 'cooldown') ? 'Cool-down' : '';
+
+  let html = `
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <div>
+        <div style="font-size:13px;color:var(--muted)">${session.name}</div>
+        <h2 style="margin:2px 0 0">${sub}</h2>
+      </div>
+      <button class="btn secondary small" id="end-session">✕ End</button>
+    </div>
+  `;
+
+  if (phase === 'warmup') {
+    const w = WARMUPS[session.sessionType];
+    if (w) html += `<div class="card"><div class="label">${w.title}</div>
+      <div class="body"><ul>${w.items.map(it => `<li>${it}</li>`).join('')}</ul></div></div>`;
+    html += `<button class="btn" id="next-phase">Done — continue →</button>`;
+  } else if (phase === 'strength') {
+    const sb = session.blocks.find(b => b.kind === 'strength');
+    if (sb) {
+      const wt = sb.weight ? `<strong>${sb.weight} kg</strong> (${sb.pct}%)` : (sb.pct ? `${sb.pct}%` : '');
+      html += `<div class="card"><div class="label">Strength</div>
+        <div class="title">${sb.name}</div>
+        <div class="body"><div>${sb.scheme || ''}</div>${wt ? `<div style="margin-top:6px">Working weight: ${wt}</div>` : ''}</div></div>`;
+    }
+    html += `<button class="btn" id="next-phase">Strength done — start WOD →</button>`;
+  } else if (phase === 'wod') {
+    const wodBlock = session.blocks.find(b => b.kind === 'wod');
+    const f = player.fmt;
+    let bigInit = '0:00';
+    if (f.mode === 'count_down') bigInit = fmtTime(f.capSec);
+    let subInit = '';
+    if (f.mode === 'interval') subInit = `Round 1 / ${f.totalRounds}  •  ${fmtTime(f.intervalSec)} left`;
+    else if (f.mode === 'count_down') subInit = `Cap ${fmtTime(f.capSec)}`;
+    else if (f.capSec) subInit = `Cap ${fmtTime(f.capSec)}`;
+    html += `
+      <div class="card" style="text-align:center">
+        <div class="label">${f.label}</div>
+        <div id="player-big-time" style="font-size:64px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:2px;margin:8px 0">${bigInit}</div>
+        <div id="player-sub-time" style="font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums">${subInit}</div>
+      </div>
+    `;
+    if (wodBlock) {
+      html += `<div class="card"><div class="label">${wodBlock.title}</div><div class="body"><ul>${wodBlock.items.map(it => {
+        if (it.isRest) return `<li><em style="color:var(--muted)">Rest</em></li>`;
+        const repsTxt = it.reps ? `<strong>${it.reps}</strong> ` : '';
+        const rxTxt = it.rx ? ` — <strong>${it.rx}</strong>` : '';
+        return `<li>${repsTxt}${it.name}${rxTxt}</li>`;
+      }).join('')}</ul></div></div>`;
+    }
+    html += `
+      <div class="row">
+        <button class="btn secondary small" id="pause-resume">${player.paused ? '▶ Resume' : '⏸ Pause'}</button>
+        <button class="btn small" id="finish-wod">Finish WOD →</button>
+      </div>
+    `;
+  } else if (phase === 'wod_done') {
+    html += `<div class="card"><div class="title">WOD complete</div>
+      <div class="body">Final time: <strong>${fmtTime(player.wodElapsed)}</strong></div></div>`;
+    html += `<button class="btn" id="next-phase">Continue → cool-down</button>`;
+  } else if (phase === 'cooldown') {
+    const c = COOLDOWNS[session.sessionType];
+    if (c) html += `<div class="card"><div class="label">${c.title}</div>
+      <div class="body"><ul>${c.items.map(it => `<li>${it}</li>`).join('')}</ul></div></div>`;
+    html += `<button class="btn" id="next-phase">Done — log session →</button>`;
+  }
+
+  el.innerHTML = html;
+  const endBtn = document.getElementById('end-session');
+  if (endBtn) endBtn.onclick = () => { if (confirm('End session without logging?')) endPlayer(); };
+  const nextBtn = document.getElementById('next-phase');
+  if (nextBtn) nextBtn.onclick = advancePlayerPhase;
+  const pr = document.getElementById('pause-resume');
+  if (pr) pr.onclick = pauseResume;
+  const fin = document.getElementById('finish-wod');
+  if (fin) fin.onclick = finishWod;
+}
+
+/* =========================================================
+   BUILD — custom workout builder
+   ========================================================= */
+const FORMAT_OPTIONS = [
+  { id: 'emom',     label: 'EMOM (every minute)',         needs: ['minutes'] },
+  { id: 'amrap',    label: 'AMRAP (countdown)',           needs: ['minutes'] },
+  { id: 'rft',      label: 'Rounds For Time',             needs: ['rounds','cap'] },
+  { id: 'every_n',  label: 'Every N min × K rounds',      needs: ['intervalMin','rounds'] },
+  { id: 'desc',     label: 'Descending reps (21-15-9 etc.)', needs: ['repScheme','cap'] },
+  { id: 'for_time', label: 'For Time (chipper)',          needs: ['cap'] },
+];
+
+function newBuilderDraft() {
+  return {
+    id: 'cw_' + Date.now().toString(36),
+    name: '',
+    sessionType: 'squat_legs',
+    strength: null,
+    wod: {
+      formatId: 'emom',
+      params: { minutes: 16, rounds: 5, cap: 15, intervalMin: 4, repScheme: '21-15-9' },
+      items: [], // [{mid, reps, rxOverride}]
+    },
+  };
+}
+
+function formatToTitleAndSpec(formatId, params) {
+  switch (formatId) {
+    case 'emom':
+      return { title: `EMOM ${params.minutes} min`,
+               spec: { mode: 'interval', intervalSec: 60, totalRounds: params.minutes, capSec: params.minutes*60 } };
+    case 'amrap':
+      return { title: `AMRAP ${params.minutes} min`,
+               spec: { mode: 'count_down', capSec: params.minutes*60 } };
+    case 'rft':
+      return { title: `${params.rounds} Rounds For Time (${params.cap} min cap)`,
+               spec: { mode: 'count_up', capSec: params.cap*60 } };
+    case 'every_n':
+      return { title: `Every ${params.intervalMin} min × ${params.rounds} (${params.intervalMin*params.rounds} min total)`,
+               spec: { mode: 'interval', intervalSec: params.intervalMin*60, totalRounds: params.rounds, capSec: params.intervalMin*params.rounds*60 } };
+    case 'desc':
+      return { title: `${params.repScheme} Reps (${params.cap} min cap)`,
+               spec: { mode: 'count_up', capSec: params.cap*60 } };
+    case 'for_time':
+      return { title: `For Time (${params.cap} min cap)`,
+               spec: { mode: 'count_up', capSec: params.cap*60 } };
+  }
+  return { title: 'For Time', spec: { mode: 'count_up', capSec: 20*60 } };
+}
+
+function renderBuild() {
+  const el = document.getElementById('build-content');
+  if (state.builderDraft) { renderBuilder(); return; }
+
+  const tab = state.workoutsTab || 'recommended';
+  let html = `
+    <h2>Workouts</h2>
+    <div class="row" style="margin-bottom:12px">
+      <button class="chip ${tab === 'recommended' ? 'on' : ''}" data-wtab="recommended">Recommended</button>
+      <button class="chip ${tab === 'mine' ? 'on' : ''}" data-wtab="mine">Mine${state.customWorkouts.length ? ` (${state.customWorkouts.length})` : ''}</button>
+    </div>
+  `;
+
+  if (tab === 'recommended') {
+    html += renderRecommendedList();
+  } else {
+    html += renderMineList();
+  }
+
+  el.innerHTML = html;
+
+  el.querySelectorAll('[data-wtab]').forEach(btn => {
+    btn.onclick = () => { state.workoutsTab = btn.dataset.wtab; saveState(); renderBuild(); };
+  });
+  bindWorkoutsTabHandlers(el, tab);
+}
+
+function renderRecommendedList() {
+  const done = sessionTypesDoneThisWeek();
+  const grouped = {};
+  Object.keys(TEMPLATES).forEach(stype => {
+    const t = TEMPLATES[stype];
+    if (!t.wods || !t.wods.length) return; // skip rest
+    grouped[stype] = { name: t.name, items: t.wods.map((w, i) => ({ sessionType: stype, wodIndex: i, title: w.title, note: w.note })) };
+  });
+
+  let html = `<p style="color:var(--muted);font-size:13px">Default pairings grouped by session type. Tap a pairing to preview the movements; tap "Use today" to set it as today's session. Movements are sampled from each slot — re-roll inside the preview to see different picks. Pairings of types you've already done this week are dimmed.</p>`;
+  Object.keys(grouped).forEach(stype => {
+    const g = grouped[stype];
+    const blocked = done.has(stype);
+    html += `
+      <div class="card" style="${blocked ? 'opacity:0.55' : ''}">
+        <div class="title">${g.name}${blocked ? ' <span class="pill">done this week</span>' : ''}</div>
+        <div class="body">
+          ${g.items.map(p => {
+            const previewId = `pv-${p.sessionType}-${p.wodIndex}`;
+            return `
+              <div style="padding:10px 0;border-top:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+                  <div style="flex:1;cursor:pointer" data-toggle-preview="${previewId}" data-pair-toggle-st="${p.sessionType}" data-pair-toggle-wi="${p.wodIndex}">
+                    <div style="font-size:14px"><span class="caret" id="caret-${previewId}" style="display:inline-block;width:10px;color:var(--muted)">▶</span> ${p.title}</div>
+                    ${p.note ? `<div style="font-size:11px;color:var(--muted);margin-left:14px">${p.note}</div>` : ''}
+                  </div>
+                  <button class="btn ${blocked ? 'secondary' : ''} small" data-pair-st="${p.sessionType}" data-pair-wi="${p.wodIndex}" ${blocked ? 'disabled' : ''}>Use today</button>
+                </div>
+                <div id="${previewId}" style="display:none;margin-top:8px;padding:10px;background:var(--panel2);border-radius:6px;border:1px solid var(--border)"></div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+  return html;
+}
+
+function bindPreviewReroll(body) {
+  const btn = body.querySelector('[data-preview-reroll]');
+  if (!btn) return;
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    const [stype, widxStr] = btn.dataset.previewReroll.split(':');
+    const widx = parseInt(widxStr, 10);
+    body.innerHTML = renderPairingPreview(stype, widx);
+    bindPreviewReroll(body);
+  };
+}
+
+/* Build the inner preview DOM for a single pairing — strength + WOD sample. */
+function renderPairingPreview(sessionType, wodIndex) {
+  const sess = generateSession(sessionType, { wodIndex });
+  if (!sess) return '<div style="color:var(--muted);font-size:13px">Could not generate preview.</div>';
+  const sb = sess.blocks.find(b => b.kind === 'strength');
+  const wb = sess.blocks.find(b => b.kind === 'wod');
+  let html = '';
+  if (sb) {
+    const wt = sb.weight ? `<strong>${sb.weight} kg</strong> (${sb.pct}%)` : (sb.pct ? `${sb.pct}%` : '');
+    html += `<div style="font-size:13px;margin-bottom:8px"><div style="text-transform:uppercase;font-size:10px;letter-spacing:0.6px;color:var(--muted)">Strength</div><strong>${sb.name}</strong> — ${sb.scheme || ''}${wt ? ` (${wt})` : ''}</div>`;
+  }
+  if (wb) {
+    html += `<div style="font-size:13px"><div style="text-transform:uppercase;font-size:10px;letter-spacing:0.6px;color:var(--muted)">${wb.title}</div>`;
+    html += `<ul style="margin:4px 0;padding-left:18px">${wb.items.map(it => {
+      if (it.isRest) return '<li><em style="color:var(--muted)">Rest</em></li>';
+      const reps = it.reps ? `<strong>${it.reps}</strong> ` : '';
+      const rx = it.rx ? ` — ${it.rx}` : '';
+      const scale = it.scaleName ? `<div style="color:var(--muted);font-size:11px;margin-left:2px">↳ scale: ${it.reps ? it.reps + ' ' : ''}${it.scaleName}${it.scaleRx ? ` (${it.scaleRx})` : ''}</div>` : '';
+      return `<li>${reps}${it.name}${rx}${scale}</li>`;
+    }).join('')}</ul>`;
+    if (wb.note) html += `<div style="color:var(--muted);font-size:12px">${wb.note}</div>`;
+    html += `</div>`;
+  }
+  html += `<button class="btn secondary small" data-preview-reroll="${sessionType}:${wodIndex}" style="margin-top:10px">↻ Re-roll movements</button>`;
+  return html;
+}
+
+function renderMineList() {
+  let html = '';
+  if (!state.customWorkouts.length) {
+    html += `<div class="empty">No custom workouts yet.<br>Tap below to build one.</div>`;
+  } else {
+    html += state.customWorkouts.map(w => `
+      <div class="card">
+        <div class="title">${w.name || '(untitled)'}</div>
+        <div class="body">
+          <div style="font-size:13px;color:var(--muted)">${w.wod && w.wod.items ? w.wod.items.length : 0} movements • ${formatToTitleAndSpec(w.wod.formatId, w.wod.params).title}</div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn small"          data-cw-use="${w.id}">▶ Use today</button>
+            <button class="btn secondary small" data-cw-edit="${w.id}">Edit</button>
+            <button class="btn secondary small" data-cw-export="${w.id}">Export</button>
+            <button class="btn danger small"   data-cw-delete="${w.id}">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  html += `
+    <div class="row" style="margin-top:16px">
+      <button class="btn small" id="new-workout">＋ New workout</button>
+      <button class="btn secondary small" id="import-workout">Import JSON</button>
+    </div>
+  `;
+  return html;
+}
+
+function bindWorkoutsTabHandlers(el, tab) {
+  if (tab === 'recommended') {
+    // "Use today" buttons
+    el.querySelectorAll('[data-pair-st]').forEach(btn => {
+      btn.onclick = () => {
+        const stype = btn.dataset.pairSt;
+        const widx = parseInt(btn.dataset.pairWi, 10);
+        state.chosenForToday = { sessionType: stype, wodIndex: widx };
+        state.todayDraft = null;
+        saveState();
+        setView('today');
+      };
+    });
+    // Tap title row → expand/collapse preview, generate preview lazily on first open
+    el.querySelectorAll('[data-toggle-preview]').forEach(row => {
+      row.onclick = () => {
+        const id = row.dataset.togglePreview;
+        const stype = row.dataset.pairToggleSt;
+        const widx = parseInt(row.dataset.pairToggleWi, 10);
+        const body = document.getElementById(id);
+        const caret = document.getElementById('caret-' + id);
+        if (!body) return;
+        const open = body.style.display !== 'none';
+        if (open) {
+          body.style.display = 'none';
+          if (caret) caret.textContent = '▶';
+        } else {
+          if (!body.dataset.loaded) {
+            body.innerHTML = renderPairingPreview(stype, widx);
+            body.dataset.loaded = '1';
+            bindPreviewReroll(body);
+          }
+          body.style.display = '';
+          if (caret) caret.textContent = '▼';
+        }
+      };
+    });
+    return;
+  }
+  // Mine tab handlers (same behavior as before)
+
+  const newBtn = document.getElementById('new-workout');
+  if (newBtn) newBtn.onclick = () => {
+    state.builderDraft = newBuilderDraft();
+    saveState();
+    renderBuild();
+  };
+  const importBtn = document.getElementById('import-workout');
+  if (importBtn) importBtn.onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/json';
+    inp.onchange = () => {
+      const f = inp.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const obj = JSON.parse(r.result);
+          if (!obj.id) obj.id = 'cw_' + Date.now().toString(36);
+          state.customWorkouts.unshift(obj);
+          saveState();
+          renderBuild();
+        } catch(e) { alert('Invalid JSON'); }
+      };
+      r.readAsText(f);
+    };
+    inp.click();
+  };
+  el.querySelectorAll('[data-cw-use]').forEach(btn => btn.onclick = () => useCustomToday(btn.dataset.cwUse));
+  el.querySelectorAll('[data-cw-edit]').forEach(btn => btn.onclick = () => {
+    const w = state.customWorkouts.find(x => x.id === btn.dataset.cwEdit);
+    if (w) { state.builderDraft = JSON.parse(JSON.stringify(w)); saveState(); renderBuild(); }
+  });
+  el.querySelectorAll('[data-cw-export]').forEach(btn => btn.onclick = () => {
+    const w = state.customWorkouts.find(x => x.id === btn.dataset.cwExport);
+    if (!w) return;
+    const blob = new Blob([JSON.stringify(w, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = (w.name || 'workout').replace(/[^a-z0-9]+/gi, '_') + '.json'; a.click();
+    URL.revokeObjectURL(url);
+  });
+  el.querySelectorAll('[data-cw-delete]').forEach(btn => btn.onclick = () => {
+    if (!confirm('Delete this workout?')) return;
+    state.customWorkouts = state.customWorkouts.filter(x => x.id !== btn.dataset.cwDelete);
+    saveState();
+    renderBuild();
+  });
+}
+
+function renderBuilder() {
+  const el = document.getElementById('build-content');
+  const d = state.builderDraft;
+  const fmt = FORMAT_OPTIONS.find(f => f.id === d.wod.formatId) || FORMAT_OPTIONS[0];
+
+  // Movement options grouped by slot
+  const slotOrder = ['strength_squat','strength_bench','strength_clean','gym_pull','gym_push','gym_lower','cardio','weighted_compound','weighted_carry','jump','core','ball','burpee'];
+  const movOptions = slotOrder.map(slot => {
+    const ms = MOVEMENTS.filter(m => m.slot === slot);
+    if (!ms.length) return '';
+    return `<optgroup label="${slot}">${ms.map(m => `<option value="${m.id}">${m.name}</option>`).join('')}</optgroup>`;
+  }).join('');
+
+  const paramsHtml = (() => {
+    const p = d.wod.params;
+    let h = '';
+    if (fmt.needs.includes('minutes'))     h += `<div><label>Total minutes</label><input type="number" inputmode="numeric" id="bp-minutes"     value="${p.minutes}"></div>`;
+    if (fmt.needs.includes('rounds'))      h += `<div><label>Rounds</label>       <input type="number" inputmode="numeric" id="bp-rounds"      value="${p.rounds}"></div>`;
+    if (fmt.needs.includes('cap'))         h += `<div><label>Cap (min)</label>    <input type="number" inputmode="numeric" id="bp-cap"         value="${p.cap}"></div>`;
+    if (fmt.needs.includes('intervalMin')) h += `<div><label>Every (min)</label>  <input type="number" inputmode="numeric" id="bp-intervalMin" value="${p.intervalMin}"></div>`;
+    if (fmt.needs.includes('repScheme'))   h += `<div><label>Rep scheme</label>   <input type="text"                       id="bp-repScheme"   value="${p.repScheme}" placeholder="21-15-9"></div>`;
+    return `<div class="grid2">${h}</div>`;
+  })();
+
+  let html = `
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h2 style="margin:0">Build workout</h2>
+      <button class="btn secondary small" id="cancel-builder">✕ Cancel</button>
+    </div>
+
+    <div class="card">
+      <div class="title">Basics</div>
+      <div class="body">
+        <label>Name</label>
+        <input type="text" id="bf-name" value="${d.name || ''}" placeholder="e.g. Friday Burner">
+        <label>Theme (drives warm-up & cool-down)</label>
+        <select id="bf-stype">
+          ${SESSION_TYPES.map(t => `<option value="${t.id}" ${t.id === d.sessionType ? 'selected' : ''}>${t.label}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Strength block (optional)</div>
+      <div class="body">
+        <label>Movement</label>
+        <select id="bf-strmov">
+          <option value="">— none —</option>
+          ${movOptions}
+        </select>
+        <label>Scheme (use {pct} as placeholder)</label>
+        <input type="text" id="bf-strscheme" value="${d.strength?.scheme || ''}" placeholder="4×: 5 reps @ {pct}%">
+        <label>% of 1RM</label>
+        <input type="number" inputmode="numeric" id="bf-strpct" value="${d.strength?.pct || ''}" placeholder="65">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">WOD format</div>
+      <div class="body">
+        <select id="bf-format">
+          ${FORMAT_OPTIONS.map(f => `<option value="${f.id}" ${f.id === d.wod.formatId ? 'selected' : ''}>${f.label}</option>`).join('')}
+        </select>
+        <div style="margin-top:8px">${paramsHtml}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Movements</div>
+      <div class="body">
+        <div id="bf-items">${d.wod.items.map((it, i) => renderItemRow(it, i, movOptions)).join('') || '<div style="color:var(--muted);font-size:13px">No movements yet.</div>'}</div>
+        <button class="btn secondary small" id="bf-add" style="margin-top:8px">＋ Add movement</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px">
+      <button class="btn" id="bf-save">Save workout</button>
+    </div>
+  `;
+  el.innerHTML = html;
+
+  // Pre-set strength selection
+  if (d.strength?.mid) el.querySelector('#bf-strmov').value = d.strength.mid;
+
+  // Bind basics
+  el.querySelector('#bf-name').oninput = e => { d.name = e.target.value; saveState(); };
+  el.querySelector('#bf-stype').onchange = e => { d.sessionType = e.target.value; saveState(); };
+  el.querySelector('#bf-strmov').onchange = e => {
+    if (!e.target.value) { d.strength = null; }
+    else { d.strength = d.strength || {}; d.strength.mid = e.target.value; }
+    saveState();
+  };
+  el.querySelector('#bf-strscheme').oninput = e => { d.strength = d.strength || {}; d.strength.scheme = e.target.value; saveState(); };
+  el.querySelector('#bf-strpct').oninput   = e => { d.strength = d.strength || {}; d.strength.pct    = parseInt(e.target.value, 10) || null; saveState(); };
+
+  el.querySelector('#bf-format').onchange = e => {
+    d.wod.formatId = e.target.value;
+    saveState();
+    renderBuilder(); // re-render so the params area updates
+  };
+  ['minutes','rounds','cap','intervalMin','repScheme'].forEach(k => {
+    const f = el.querySelector('#bp-' + k);
+    if (!f) return;
+    f.oninput = e => {
+      d.wod.params[k] = (k === 'repScheme') ? e.target.value : (parseInt(e.target.value, 10) || 0);
+      saveState();
+    };
+  });
+
+  // Items binding
+  el.querySelectorAll('[data-bf-mid]').forEach(sel => {
+    sel.onchange = e => {
+      const idx = parseInt(sel.dataset.bfMid, 10);
+      d.wod.items[idx].mid = e.target.value;
+      saveState();
+    };
+  });
+  el.querySelectorAll('[data-bf-reps]').forEach(inp => {
+    inp.oninput = e => {
+      const idx = parseInt(inp.dataset.bfReps, 10);
+      d.wod.items[idx].reps = parseInt(e.target.value, 10) || null;
+      saveState();
+    };
+  });
+  el.querySelectorAll('[data-bf-rx]').forEach(inp => {
+    inp.oninput = e => {
+      const idx = parseInt(inp.dataset.bfRx, 10);
+      d.wod.items[idx].rxOverride = e.target.value || null;
+      saveState();
+    };
+  });
+  el.querySelectorAll('[data-bf-del]').forEach(btn => {
+    btn.onclick = () => {
+      const idx = parseInt(btn.dataset.bfDel, 10);
+      d.wod.items.splice(idx, 1);
+      saveState();
+      renderBuilder();
+    };
+  });
+
+  el.querySelector('#bf-add').onclick = () => {
+    d.wod.items.push({ mid: 'thruster', reps: 10, rxOverride: null });
+    saveState();
+    renderBuilder();
+  };
+
+  el.querySelector('#cancel-builder').onclick = () => {
+    if (d.name && !confirm('Discard this workout?')) return;
+    state.builderDraft = null;
+    saveState();
+    renderBuild();
+  };
+
+  el.querySelector('#bf-save').onclick = () => {
+    if (!d.name.trim()) { alert('Give it a name'); return; }
+    if (!d.wod.items.length) { alert('Add at least one movement'); return; }
+    const existing = state.customWorkouts.findIndex(w => w.id === d.id);
+    if (existing >= 0) state.customWorkouts[existing] = d;
+    else state.customWorkouts.unshift(d);
+    state.builderDraft = null;
+    saveState();
+    renderBuild();
+  };
+}
+
+function renderItemRow(it, i, movOptions) {
+  return `
+    <div style="display:grid;grid-template-columns:1fr 70px 90px auto;gap:6px;margin-bottom:6px;align-items:center">
+      <select data-bf-mid="${i}">${movOptions}</select>
+      <input type="number" inputmode="numeric" data-bf-reps="${i}" value="${it.reps || ''}"  placeholder="reps">
+      <input type="text"                       data-bf-rx="${i}"   value="${it.rxOverride || ''}" placeholder="auto">
+      <button class="btn danger small" data-bf-del="${i}" style="padding:6px 10px">✕</button>
+    </div>
+  `;
+}
+
+/* "Use today" — builds a session draft from a custom workout. */
+function useCustomToday(id) {
+  const w = state.customWorkouts.find(x => x.id === id);
+  if (!w) return;
+  const phase = getCurrentPhase();
+  const blocks = [];
+  if (w.strength && w.strength.mid) {
+    const m = MOVEMENTS.find(x => x.id === w.strength.mid);
+    const pct = w.strength.pct || pctForLift(m?.slot, phase);
+    const rm = (m && m.rmKey) ? state.oneRMs[m.rmKey] : null;
+    const wt = weightFromRM(rm, pct);
+    const scheme = (w.strength.scheme || '').replace('{pct}', pct);
+    blocks.push({ kind: 'strength', name: m ? m.name : 'Strength', mid: m ? m.id : null, scheme, pct, weight: wt });
+  }
+  const { title, spec } = formatToTitleAndSpec(w.wod.formatId, w.wod.params);
+  const items = w.wod.items.map(it => {
+    const m = MOVEMENTS.find(x => x.id === it.mid);
+    if (!m) return { name: '— missing —' };
+    const reps = it.reps != null ? repsLabel(m, it.reps, phase) : null;
+    const rx = it.rxOverride || rxFor(m.id, phase);
+    const scale = pickScale(m);
+    return {
+      name: m.name, mid: m.id, rx, reps,
+      scaleName: scale ? scale.name : null,
+      scaleRx: scale ? rxFor(scale.id, phase) : null,
+    };
+  });
+  blocks.push({ kind: 'wod', title, items, note: '' });
+
+  state.todayDraft = {
+    date: new Date().toISOString().slice(0, 10),
+    sessionType: w.sessionType,
+    name: w.name,
+    phase,
+    blocks,
+    customId: w.id,
+    customSpec: spec, // explicit format for the player
+  };
+  saveState();
+  setView('today');
+}
+
+/* =========================================================
+   RENDER — log
+   ========================================================= */
+function renderLog() {
+  const el = document.getElementById('log-content');
+  if (!state.sessions.length) {
+    el.innerHTML = `<div class="empty">No sessions logged yet.<br>Finish a workout from Today and tap Log this session.</div>`;
+    return;
+  }
+  el.innerHTML = state.sessions.map(s => `
+    <div class="card">
+      <div class="label">${s.date} • ${PHASE_NAMES[s.phase] || ''}</div>
+      <div class="title">${s.name}</div>
+      <div class="body">
+        ${s.score ? `<div><strong>Score:</strong> ${s.score}</div>` : ''}
+        ${s.rpe ? `<div><strong>RPE:</strong> ${s.rpe}/10</div>` : ''}
+        ${s.notes ? `<div style="color:var(--muted)">${s.notes}</div>` : ''}
+        ${s.movements && s.movements.length ? `
+          <ul>${s.movements.map(m => `<li>${m.name}${m.weight?` — ${m.weight}kg`:''}${m.reps?` × ${m.reps}`:''}${m.notes?` <span style="color:var(--muted)">(${m.notes})</span>`:''}</li>`).join('')}</ul>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+/* =========================================================
+   RENDER — settings
+   ========================================================= */
+function renderSettings() {
+  const el = document.getElementById('settings-content');
+  // Simple sectioned settings
+  el.innerHTML = `
+    <div class="card">
+      <div class="title">Equipment</div>
+      <div class="body">
+        <div class="group-title">Barbell</div><div class="chips" data-eq-group="barbell"></div>
+        <div class="group-title">Free weights</div><div class="chips" data-eq-group="freeweights"></div>
+        <div class="group-title">Gymnastic</div><div class="chips" data-eq-group="gymnastic"></div>
+        <div class="group-title">Cardio</div><div class="chips" data-eq-group="cardio"></div>
+        <div class="group-title">Other</div><div class="chips" data-eq-group="other"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Injuries / avoid</div>
+      <div class="body"><div class="chips" id="injury-chips"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="title">Movement blacklist</div>
+      <div class="body">
+        <p style="color:var(--muted);font-size:13px">Tap to never see these in your sessions.</p>
+        <div class="chips" id="bl-chips"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">1RMs (kg)</div>
+      <div class="body">
+        <p style="color:var(--muted);font-size:12px;margin-top:0">Used for strength % and to drive WOD weights for movements that map to each lift.</p>
+        <div class="grid2">
+          <div><label>Back Squat</label><input type="number" id="rm-bs"    inputmode="decimal"></div>
+          <div><label>Front Squat</label><input type="number" id="rm-fs"    inputmode="decimal"></div>
+          <div><label>Bench Press</label><input type="number" id="rm-bench" inputmode="decimal"></div>
+          <div><label>Deadlift</label>   <input type="number" id="rm-dl"    inputmode="decimal"></div>
+          <div><label>Clean</label>      <input type="number" id="rm-cl"    inputmode="decimal"></div>
+          <div><label>Snatch</label>     <input type="number" id="rm-sn"    inputmode="decimal"></div>
+          <div><label>Push Press</label> <input type="number" id="rm-pp"    inputmode="decimal"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Recommendations</div>
+      <div class="body">
+        <div class="row">
+          <label style="flex:1">Show today's recommended session</label>
+          <input type="checkbox" id="use-recs" ${state.useRecommendations ? 'checked' : ''}>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px">When off, opening Today goes straight to the pairing picker (good if you mostly run your own custom workouts).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Scaled movements</div>
+      <div class="body">
+        <div class="row">
+          <label style="flex:1">Show scaled versions in my workouts</label>
+          <input type="checkbox" id="show-scaled" ${state.showScaled ? 'checked' : ''}>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px">When on, the WOD shows the scaled version (per the levels you pick below) instead of RX.</p>
+        <div id="scale-levels" style="margin-top:10px;${state.showScaled ? '' : 'display:none'}"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Phase</div>
+      <div class="body">
+        <div class="row">
+          <label style="flex:1">Auto from start date</label>
+          <input type="checkbox" id="auto-phase" ${state.autoPhase ? 'checked' : ''}>
+        </div>
+        <div id="phase-manual" style="${state.autoPhase ? 'display:none' : ''}">
+          <label>Current phase</label>
+          <select id="phase-select">
+            <option value="1">1 — Re-Entry (50–55%)</option>
+            <option value="2">2 — Build (60–65%)</option>
+            <option value="3">3 — Match Source (65–70%)</option>
+            <option value="4">4 — Original (75–80%)</option>
+          </select>
+        </div>
+        <label>Start date</label>
+        <input type="date" id="start-date">
+        <div style="color:var(--muted);font-size:12px;margin-top:4px">Current: <strong>${PHASE_NAMES[getCurrentPhase()]}</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">Data</div>
+      <div class="body">
+        <div class="row">
+          <button class="btn secondary small" id="export-data">Export JSON</button>
+          <button class="btn secondary small" id="import-data">Import JSON</button>
+        </div>
+        <button class="btn danger" id="reset-data" style="margin-top:12px">Reset all data</button>
+      </div>
+    </div>
+  `;
+
+  // Equipment chips (reuse onboarding-style)
+  ['barbell','freeweights','gymnastic','cardio','other'].forEach(g => {
+    const cont = el.querySelector(`[data-eq-group="${g}"]`);
+    EQUIPMENT.filter(e => e.group === g).forEach(e => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (state.equipment.includes(e.id) ? ' on' : '');
+      b.textContent = e.label;
+      b.onclick = () => {
+        const i = state.equipment.indexOf(e.id);
+        if (i >= 0) state.equipment.splice(i, 1); else state.equipment.push(e.id);
+        b.classList.toggle('on');
+        saveState();
+      };
+      cont.appendChild(b);
+    });
+  });
+  // Injuries
+  const inj = el.querySelector('#injury-chips');
+  BODY_PARTS.forEach(p => {
+    const b = document.createElement('button');
+    b.className = 'chip danger' + (state.injuries.includes(p.id) ? ' on' : '');
+    b.textContent = p.label;
+    b.onclick = () => {
+      const i = state.injuries.indexOf(p.id);
+      if (i >= 0) state.injuries.splice(i, 1); else state.injuries.push(p.id);
+      b.classList.toggle('on');
+      saveState();
+    };
+    inj.appendChild(b);
+  });
+  // Blacklist
+  const bl = el.querySelector('#bl-chips');
+  MOVEMENTS.forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'chip danger' + (state.blacklist.includes(m.id) ? ' on' : '');
+    b.textContent = m.name;
+    b.onclick = () => {
+      const i = state.blacklist.indexOf(m.id);
+      if (i >= 0) state.blacklist.splice(i, 1); else state.blacklist.push(m.id);
+      b.classList.toggle('on');
+      saveState();
+    };
+    bl.appendChild(b);
+  });
+  // 1RMs
+  const rmFields = [
+    ['rm-bs',    'backSquat'],
+    ['rm-fs',    'frontSquat'],
+    ['rm-bench', 'bench'],
+    ['rm-dl',    'deadlift'],
+    ['rm-cl',    'clean'],
+    ['rm-sn',    'snatch'],
+    ['rm-pp',    'pushPress'],
+  ];
+  rmFields.forEach(([id, key]) => {
+    const f = el.querySelector('#' + id);
+    if (!f) return;
+    f.value = state.oneRMs[key] || '';
+    f.onchange = (e) => {
+      state.oneRMs[key] = parseFloat(e.target.value) || null;
+      saveState();
+    };
+  });
+  // Recommendations toggle
+  el.querySelector('#use-recs').onchange = (e) => {
+    state.useRecommendations = e.target.checked;
+    state.chosenForToday = null;
+    state.todayDraft = null;
+    saveState();
+  };
+
+  // Scaled toggle + per-movement scale level pickers
+  const renderScaleLevels = () => {
+    const cont = el.querySelector('#scale-levels');
+    if (!cont) return;
+    const ids = Object.keys(SCALES).sort((a, b) => {
+      const ma = MOVEMENTS.find(x => x.id === a)?.name || a;
+      const mb = MOVEMENTS.find(x => x.id === b)?.name || b;
+      return ma.localeCompare(mb);
+    });
+    cont.innerHTML = ids.map(mid => {
+      const m = MOVEMENTS.find(x => x.id === mid);
+      if (!m) return '';
+      const chain = SCALES[mid];
+      const lvl = (state.scaleLevels && state.scaleLevels[mid]) | 0;
+      const opts = [`<option value="0">${m.name} (RX)</option>`].concat(
+        chain.map((sid, i) => {
+          const sm = MOVEMENTS.find(x => x.id === sid);
+          return `<option value="${i+1}">${sm ? sm.name : sid}</option>`;
+        })
+      );
+      return `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin-bottom:6px">
+          <div style="font-size:13px">${m.name}</div>
+          <select data-scale-mid="${mid}">${opts.map(o => o.replace(`value="${lvl}"`, `value="${lvl}" selected`)).join('')}</select>
+        </div>
+      `;
+    }).join('');
+    cont.querySelectorAll('[data-scale-mid]').forEach(sel => {
+      sel.onchange = (e) => {
+        state.scaleLevels = state.scaleLevels || {};
+        const v = parseInt(e.target.value, 10) | 0;
+        if (v === 0) delete state.scaleLevels[sel.dataset.scaleMid];
+        else state.scaleLevels[sel.dataset.scaleMid] = v;
+        state.todayDraft = null; // force regenerate so changes show immediately
+        saveState();
+      };
+    });
+  };
+  el.querySelector('#show-scaled').onchange = (e) => {
+    state.showScaled = e.target.checked;
+    el.querySelector('#scale-levels').style.display = state.showScaled ? '' : 'none';
+    state.todayDraft = null;
+    saveState();
+    renderScaleLevels();
+  };
+  if (state.showScaled) renderScaleLevels();
+
+  // Phase
+  el.querySelector('#auto-phase').onchange = (e) => {
+    state.autoPhase = e.target.checked;
+    el.querySelector('#phase-manual').style.display = state.autoPhase ? 'none' : '';
+    saveState();
+  };
+  el.querySelector('#phase-select').value = String(state.currentPhase);
+  el.querySelector('#phase-select').onchange = (e) => { state.currentPhase = parseInt(e.target.value, 10); saveState(); };
+  el.querySelector('#start-date').value = state.startDate || '';
+  el.querySelector('#start-date').onchange = (e) => { state.startDate = e.target.value; saveState(); };
+  // Data
+  el.querySelector('#export-data').onclick = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'train-data.json'; a.click();
+    URL.revokeObjectURL(url);
+  };
+  el.querySelector('#import-data').onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/json';
+    inp.onchange = () => {
+      const file = inp.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const parsed = JSON.parse(r.result);
+          state = { ...defaultState(), ...parsed };
+          saveState();
+          renderSettings();
+        } catch (e) { alert('Invalid JSON'); }
+      };
+      r.readAsText(file);
+    };
+    inp.click();
+  };
+  el.querySelector('#reset-data').onclick = () => {
+    if (!confirm('Reset everything? This wipes equipment, injuries, logs, and settings.')) return;
+    localStorage.removeItem(LS_KEY);
+    state = defaultState();
+    setView('onboarding');
+  };
+}
+
+/* =========================================================
+   RENDER — reference
+   ========================================================= */
+function renderReference() {
+  const search = document.getElementById('ref-search');
+  const meta = document.getElementById('ref-meta');
+  const content = document.getElementById('ref-content');
+  const q = (search.value || '').trim().toLowerCase();
+
+  // Sort A-Z by name; filter by query
+  const all = MOVEMENTS.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const filtered = q ? all.filter(m => m.name.toLowerCase().includes(q) || m.id.includes(q)) : all;
+
+  meta.textContent = q
+    ? `${filtered.length} of ${all.length} movements`
+    : `${all.length} movements`;
+
+  if (!filtered.length) {
+    content.innerHTML = `<div class="empty">No movements match "${q}".</div>`;
+    return;
+  }
+
+  // Same single-column thumb layout as Today's reference card
+  content.innerHTML = `
+    <div class="mov-grid">
+      ${filtered.map(m => {
+        const slotName = m.slot.replace(/_/g, ' ');
+        return `
+          <div class="mov-item">
+            <img src="images/${encodeURIComponent(m.name)}.png" alt="${m.name}"
+                 onerror="this.parentElement.classList.add('no-image'); this.outerHTML = '<div class=&quot;mov-thumb&quot;>image soon</div>';">
+            <div class="mov-name">${m.name}<div style="font-size:11px;color:var(--muted);font-weight:400;margin-top:2px;text-transform:uppercase;letter-spacing:0.5px">${slotName}</div></div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  // Re-bind search-as-you-type (only once, but cheap to set every render)
+  search.oninput = () => renderReference();
+}
+/* =========================================================
+   ROUTING
+   ========================================================= */
+function setView(v) {
+  state.view = v;
+  saveState();
+  document.querySelectorAll('.view').forEach(s => s.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.querySelectorAll('nav#bottom button').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  if (v === 'today') renderToday();
+  if (v === 'log') renderLog();
+  if (v === 'settings') renderSettings();
+  if (v === 'reference') renderReference();
+  if (v === 'onboarding') renderOnboarding();
+  if (v === 'player') renderPlayer();
+  if (v === 'build') renderBuild();
+  // hide bottom nav during onboarding & player (full-screen flow)
+  document.getElementById('bottom').style.display = (v === 'onboarding' || v === 'player') ? 'none' : 'grid';
+}
+document.querySelectorAll('nav#bottom button').forEach(b => {
+  b.onclick = () => setView(b.dataset.view);
+});
+/* =========================================================
+   INIT
+   ========================================================= */
+if (!state.onboarded) setView('onboarding'); else setView(state.view || 'today');
+
+/* Service worker (best-effort, ignored on file://) */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
