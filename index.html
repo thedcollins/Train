@@ -425,15 +425,32 @@ const MOVEMENTS = [
   // STRENGTH — SQUAT (named-lift slot for Monday)
   // ============================================
   { id: 'back_squat',       name: 'Back Squat',           slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'front_squat_str',  name: 'Front Squat',          slot: 'strength_squat', equipment: ['barbell','rack'],   loads: [...KNEES, ...WRISTS, 'lower_back'], rmKey: 'frontSquat' },
+  { id: 'pause_back_squat', name: 'Pause Back Squat',     slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'tempo_back_squat', name: 'Tempo Back Squat',     slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'box_squat',        name: 'Box Squat',            slot: 'strength_squat', equipment: ['barbell','rack','box'], loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'pin_squat',        name: 'Pin Squat',            slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'backSquat' },
+  { id: 'pause_front_squat',name: 'Pause Front Squat',    slot: 'strength_squat', equipment: ['barbell','rack'],   loads: [...KNEES, ...WRISTS, 'lower_back'], rmKey: 'frontSquat' },
+  { id: 'zercher_squat',    name: 'Zercher Squat',        slot: 'strength_squat', equipment: ['barbell','rack'],   loads: ['lower_back', ...KNEES, ...ELBOWS], rmKey: 'backSquat' },
+  { id: 'oh_squat_str',     name: 'Overhead Squat',       slot: 'strength_squat', equipment: ['barbell','rack'],   loads: [...KNEES, ...SHOULDERS, ...WRISTS], rmKey: 'snatch' },
   { id: 'goblet_squat',     name: 'Goblet Squat',         slot: 'strength_squat', equipment: ['kettlebells'],      loads: [...KNEES, 'lower_back'] },
   { id: 'db_back_squat',    name: 'DB Back Squat',        slot: 'strength_squat', equipment: ['dumbbells'],        loads: [...KNEES, ...SHOULDERS] },
   { id: 'db_front_squat',   name: 'DB Front Squat',       slot: 'strength_squat', equipment: ['dumbbells'],        loads: [...KNEES, ...SHOULDERS] },
+  { id: 'bulgarian_ss_str', name: 'Bulgarian Split Squat',slot: 'strength_squat', equipment: ['dumbbells','bench'],loads: [...KNEES] },
 
   // ============================================
   // STRENGTH — BENCH (named-lift slot for Wednesday)
   // ============================================
   { id: 'bench_press',      name: 'Bench Press',          slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'incline_bench',    name: 'Incline Bench Press',  slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'close_grip_bench', name: 'Close-Grip Bench',     slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'pause_bench',      name: 'Pause Bench Press',    slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'spoto_press',      name: 'Spoto Press',          slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'tempo_bench',      name: 'Tempo Bench Press',    slot: 'strength_bench', equipment: ['barbell','bench'],  loads: [...SHOULDERS, ...ELBOWS, ...WRISTS], rmKey: 'bench' },
+  { id: 'strict_press_str', name: 'Strict Press',         slot: 'strength_bench', equipment: ['barbell','rack'],   loads: [...SHOULDERS, ...WRISTS], rmKey: 'pushPress' },
+  { id: 'push_press_str',   name: 'Push Press',           slot: 'strength_bench', equipment: ['barbell','rack'],   loads: [...SHOULDERS, ...WRISTS], rmKey: 'pushPress' },
   { id: 'db_bench',         name: 'DB Bench Press',       slot: 'strength_bench', equipment: ['dumbbells','bench'],loads: [...SHOULDERS, ...ELBOWS] },
+  { id: 'db_incline_bench', name: 'DB Incline Bench',     slot: 'strength_bench', equipment: ['dumbbells','bench'],loads: [...SHOULDERS, ...ELBOWS] },
   { id: 'floor_press',      name: 'Floor Press',          slot: 'strength_bench', equipment: ['barbell'],          loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
   { id: 'db_floor_press',   name: 'DB Floor Press',       slot: 'strength_bench', equipment: ['dumbbells'],        loads: [...SHOULDERS, ...ELBOWS] },
   { id: 'pushup',           name: 'Push Up',              slot: 'strength_bench', equipment: [],                   loads: [...SHOULDERS, ...ELBOWS, ...WRISTS] },
@@ -442,10 +459,18 @@ const MOVEMENTS = [
   // STRENGTH — CLEAN (named-lift slot for Friday)
   // ============================================
   { id: 'hang_clean',       name: 'Hang Clean',           slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'clean' },
-  { id: 'power_clean',      name: 'Power Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS] },
-  { id: 'squat_clean',      name: 'Squat Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS] },
-  { id: 'hang_squat_clean', name: 'Hang Squat Clean',     slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS] },
-  { id: 'clean_jerk',       name: 'Clean & Jerk',         slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS] },
+  { id: 'power_clean',      name: 'Power Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'clean' },
+  { id: 'squat_clean',      name: 'Squat Clean',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'clean' },
+  { id: 'hang_squat_clean', name: 'Hang Squat Clean',     slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...KNEES, ...SHOULDERS], rmKey: 'clean' },
+  { id: 'hang_power_clean', name: 'Hang Power Clean',     slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'clean' },
+  { id: 'mid_hang_clean',   name: 'Mid-Hang Clean',       slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS], rmKey: 'clean' },
+  { id: 'clean_pull',       name: 'Clean Pull',           slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS], rmKey: 'clean' },
+  { id: 'clean_jerk',       name: 'Clean & Jerk',         slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'clean' },
+  { id: 'deadlift_str',     name: 'Deadlift',             slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back'], rmKey: 'deadlift' },
+  { id: 'sumo_dl_str',      name: 'Sumo Deadlift',        slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back'], rmKey: 'deadlift' },
+  { id: 'snatch_str',       name: 'Snatch',               slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'snatch' },
+  { id: 'power_snatch_str', name: 'Power Snatch',         slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'snatch' },
+  { id: 'hang_snatch_str',  name: 'Hang Snatch',          slot: 'strength_clean', equipment: ['barbell'],          loads: ['lower_back', ...SHOULDERS, ...WRISTS], rmKey: 'snatch' },
   { id: 'db_hang_clean',    name: 'DB Hang Clean',        slot: 'strength_clean', equipment: ['dumbbells'],        loads: ['lower_back', ...SHOULDERS] },
   { id: 'kb_clean',         name: 'KB Clean',             slot: 'strength_clean', equipment: ['kettlebells'],      loads: ['lower_back', ...SHOULDERS] },
 
@@ -859,6 +884,24 @@ const TEMPLATES = {
           { slot: 'weighted_carry',   reps: 10 },
           { slot: 'rest' },
         ], note: 'A / B / C / D, rotating each minute' },
+      { title: '"Karen" — 150 Wall Balls For Time',  slots: [
+          { mid: 'wall_ball', reps: 150 },
+        ], note: 'Benchmark. Sub-8 is solid, sub-6 is fast.' },
+      { title: 'AMRAP 15 min',                       slots: [
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'weighted_carry',   reps: 20 },
+          { slot: 'jump',             reps: 15 },
+          { slot: 'cardio',           reps: 12 },
+        ] },
+      { title: '5 Rounds For Time (18 min cap)',     slots: [
+          { slot: 'weighted_compound', reps: 12 },
+          { slot: 'jump',             reps: 15 },
+          { slot: 'core',             reps: 20 },
+          { slot: 'burpee',           reps: 8 },
+        ] },
+      { title: '"Tabata Squats" — 8 × 20s/10s',      slots: [
+          { mid: 'air_squat' },
+        ], note: 'Score = lowest set. Plus 4 min mixed cardio after.' },
     ],
   },
   gym_mixed: {
@@ -888,6 +931,27 @@ const TEMPLATES = {
           { slot: 'core',             reps: 12 },
           { slot: 'cardio',           reps: 12 },
         ] },
+      { title: '"Cindy" — AMRAP 20 min',            slots: [
+          { mid: 'pull_up',  reps: 5 },
+          { mid: 'pushup',   reps: 10 },
+          { mid: 'air_squat',reps: 15 },
+        ], note: 'Benchmark. Score = total rounds + reps. 20+ rounds is excellent.' },
+      { title: '"Mary" — AMRAP 20 min',             slots: [
+          { mid: 'shspu',    reps: 5 },
+          { mid: 'pistol',   reps: 10 },
+          { mid: 'pull_up',  reps: 15 },
+        ], note: 'Benchmark. Cindy\'s harder cousin.' },
+      { title: '"Angie" — For Time (20 min cap)',   slots: [
+          { mid: 'pull_up',  reps: 100 },
+          { mid: 'pushup',   reps: 100 },
+          { mid: 'sit_up',   reps: 100 },
+          { mid: 'air_squat',reps: 100 },
+        ], note: 'Benchmark. Complete one exercise fully before moving on.' },
+      { title: 'EMOM 18 min',                       slots: [
+          { slot: 'gym_pull', reps: 5 },
+          { slot: 'gym_push', reps: 6 },
+          { slot: 'cardio',   reps: 12 },
+        ], note: 'A/B/C rotating' },
     ],
   },
   bench_push: {
@@ -920,6 +984,28 @@ const TEMPLATES = {
           { slot: 'strength_bench',   reps: 8 },
           { slot: 'ball',             reps: 15 },
           { slot: 'cardio',           reps: 12 },
+        ] },
+      { title: '"Fran" — 21-15-9 For Time',         slots: [
+          { mid: 'thruster' },
+          { mid: 'pull_up' },
+        ], note: 'Benchmark. RX: 43/29 kg thruster. Sub-5 fast, sub-3 elite.' },
+      { title: '"Diane" — 21-15-9 For Time',        slots: [
+          { mid: 'deadlift' },
+          { mid: 'shspu' },
+        ], note: 'Benchmark. RX: 102/70 kg deadlift.' },
+      { title: '"Elizabeth" — 21-15-9 For Time',    slots: [
+          { mid: 'power_clean' },
+          { mid: 'ring_dip' },
+        ], note: 'Benchmark. RX: 61/43 kg cleans.' },
+      { title: 'AMRAP 14 min',                      slots: [
+          { slot: 'strength_bench',   reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'burpee',           reps: 10 },
+        ] },
+      { title: '4 Rounds For Time (16 min cap)',    slots: [
+          { slot: 'strength_bench',   reps: 10 },
+          { slot: 'gym_pull',         reps: 8 },
+          { slot: 'cardio',           reps: 15 },
         ] },
     ],
   },
@@ -962,6 +1048,20 @@ const TEMPLATES = {
           { slot: 'cardio',           reps: 20 },
           { slot: 'cardio',           reps: 75 },
         ], note: 'mixed cardio + DU intervals' },
+      { title: '"Annie" — 50-40-30-20-10 For Time', slots: [
+          { mid: 'du' },
+          { mid: 'sit_up' },
+        ], note: 'Benchmark. Double-Unders + Sit-Ups.' },
+      { title: '"Helen" — 3 Rounds For Time (12 min cap)', slots: [
+          { mid: 'run',     reps: 16 },
+          { mid: 'kb_swing',reps: 21 },
+          { mid: 'pull_up', reps: 12 },
+        ], note: 'Benchmark. 400m run, 21 KB swings (24/16 kg), 12 pull-ups per round.' },
+      { title: '"Jackie" — For Time (15 min cap)',  slots: [
+          { mid: 'row',     reps: 50 },
+          { mid: 'thruster',reps: 50 },
+          { mid: 'pull_up', reps: 30 },
+        ], note: 'Benchmark. 1000m row (≈50 cal), 50 thrusters @ 20/15 kg, 30 pull-ups.' },
     ],
   },
   clean_triplet: {
@@ -994,6 +1094,21 @@ const TEMPLATES = {
           { slot: 'weighted_compound', reps: 8 },
           { slot: 'weighted_carry',   reps: 10 },
         ] },
+      { title: '"Grace" — 30 Clean & Jerks For Time', slots: [
+          { mid: 'clean_jerk', reps: 30 },
+        ], note: 'Benchmark. RX: 61/43 kg. Sub-5 strong, sub-3 elite.' },
+      { title: '"DT" — 5 Rounds For Time (20 min cap)', slots: [
+          { mid: 'deadlift',  reps: 12 },
+          { mid: 'hang_clean',reps: 9 },
+          { mid: 'push_jerk', reps: 6 },
+        ], note: 'Benchmark. RX: 70/47.5 kg.' },
+      { title: '"Isabel" — 30 Snatches For Time',   slots: [
+          { mid: 'snatch', reps: 30 },
+        ], note: 'Benchmark. RX: 61/43 kg.' },
+      { title: 'EMOM 14 min',                       slots: [
+          { slot: 'weighted_compound', reps: 5 },
+          { slot: 'cardio',           reps: 12 },
+        ], note: 'A/B alternating' },
     ],
   },
   long_workout: {
@@ -1027,6 +1142,33 @@ const TEMPLATES = {
           { slot: 'burpee',           reps: 3 },
           { slot: 'weighted_compound', reps: 6 },
         ], note: 'Long synchro-style chipper' },
+      { title: '"Murph" — For Time (40 min cap)',   slots: [
+          { mid: 'run' },
+          { mid: 'pull_up',  reps: 100 },
+          { mid: 'pushup',   reps: 200 },
+          { mid: 'air_squat',reps: 300 },
+          { mid: 'run' },
+        ], note: 'Benchmark. 1 mile run, 100 pull-ups, 200 push-ups, 300 air squats, 1 mile run. Wear vest if RX.' },
+      { title: '"Filthy Fifty" — For Time (30 min cap)', slots: [
+          { mid: 'box_jump',     reps: 50 },
+          { mid: 'jumping_pull_up', reps: 50 },
+          { mid: 'kb_swing',     reps: 50 },
+          { mid: 'db_lunge',     reps: 50 },
+          { mid: 'kte',          reps: 50 },
+          { mid: 'push_press',   reps: 50 },
+          { mid: 'wall_ball',    reps: 50 },
+          { mid: 'burpee',       reps: 50 },
+          { mid: 'du',           reps: 50 },
+        ], note: 'Benchmark chipper. 50 reps each, in order.' },
+      { title: '"Nicole" — AMRAP 20 min',           slots: [
+          { mid: 'run' },
+          { mid: 'pull_up' },
+        ], note: 'Benchmark. 400m run, then max pull-ups. New round each time you run.' },
+      { title: '"Kelly" — 5 Rounds For Time (30 min cap)', slots: [
+          { mid: 'run',       reps: 16 },
+          { mid: 'box_jump',  reps: 30 },
+          { mid: 'wall_ball', reps: 30 },
+        ], note: 'Benchmark. 400m run, 30 box jumps (24"/20"), 30 wall balls.' },
     ],
   },
   rest: {
@@ -1555,11 +1697,18 @@ function generateSession(sessionType, opts = {}) {
   }
 
   // Strength block (named lift OR a fixed scheme like core/gymnastic EMOM)
+  let strengthMidOut = null;
   if (tmpl.strength) {
     if (tmpl.strength.slot) {
-      let m = pickFromSlot(tmpl.strength.slot, used);
+      let m = null;
+      if (opts.strengthMid) {
+        const forced = MOVEMENTS.find(x => x.id === opts.strengthMid && x.slot === tmpl.strength.slot);
+        if (forced && isMovementUsable(forced)) { m = forced; used.add(m.id); }
+      }
+      if (!m) m = pickFromSlot(tmpl.strength.slot, used);
       m = applyUserScale(m);
       if (m) {
+        strengthMidOut = m.id;
         const pct = pctForLift(tmpl.strength.slot, phase);
         const rm = m.rmKey ? state.oneRMs[m.rmKey] : null;
         const wt = weightFromRM(rm, pct);
@@ -1592,7 +1741,14 @@ function generateSession(sessionType, opts = {}) {
       const s = (typeof sRaw === 'string') ? { slot: sRaw } : sRaw;
       // Explicit rest slot in EMOMs
       if (s.slot === 'rest') { items.push({ name: 'Rest', isRest: true }); continue; }
-      let m = pickFromSlot(s.slot, used);
+      let m;
+      if (s.mid) {
+        const forced = MOVEMENTS.find(x => x.id === s.mid);
+        m = (forced && isMovementUsable(forced)) ? forced : null;
+        if (m) used.add(m.id);
+      } else {
+        m = pickFromSlot(s.slot, used);
+      }
       m = applyUserScale(m);
       if (!m) { items.push({ name: '— (none available)' }); continue; }
       const reps = (s.reps != null) ? repsLabel(m, s.reps, phase) : null;
@@ -1617,7 +1773,14 @@ function generateSession(sessionType, opts = {}) {
     for (const sRaw of (f.slots || [])) {
       const s = (typeof sRaw === 'string') ? { slot: sRaw } : sRaw;
       if (s.slot === 'rest') { fItems.push({ name: 'Rest', isRest: true }); continue; }
-      let m = pickFromSlot(s.slot, used);
+      let m;
+      if (s.mid) {
+        const forced = MOVEMENTS.find(x => x.id === s.mid);
+        m = (forced && isMovementUsable(forced)) ? forced : null;
+        if (m) used.add(m.id);
+      } else {
+        m = pickFromSlot(s.slot, used);
+      }
       m = applyUserScale(m);
       if (!m) { fItems.push({ name: '— (none available)' }); continue; }
       const reps = (s.reps != null) ? repsLabel(m, s.reps, phase) : null;
@@ -1639,6 +1802,7 @@ function generateSession(sessionType, opts = {}) {
     phase,
     blocks,
     wodIdx,
+    strengthMid: strengthMidOut,
   };
 }
 
@@ -1760,22 +1924,28 @@ function renderToday() {
     return renderPicker();
   }
 
-  let sessionType, wodIndex;
+  let sessionType, wodIndex, strengthMid;
   if (state.chosenForToday) {
     sessionType = state.chosenForToday.sessionType;
     wodIndex = state.chosenForToday.wodIndex;
+    strengthMid = state.chosenForToday.strengthMid || null;
   } else {
     sessionType = currentSessionType();
     wodIndex = null; // will be randomly picked by generator
+    strengthMid = null;
   }
 
   const todayKey = today.toISOString().slice(0, 10);
   const draftStale = !state.todayDraft
                   || state.todayDraft.sessionType !== sessionType
                   || state.todayDraft.date !== todayKey
-                  || (wodIndex != null && state.todayDraft.wodIdx !== wodIndex);
+                  || (wodIndex != null && state.todayDraft.wodIdx !== wodIndex)
+                  || (strengthMid != null && state.todayDraft.strengthMid !== strengthMid);
   if (draftStale) {
-    state.todayDraft = generateSession(sessionType, wodIndex != null ? { wodIndex } : {});
+    const genOpts = {};
+    if (wodIndex != null) genOpts.wodIndex = wodIndex;
+    if (strengthMid) genOpts.strengthMid = strengthMid;
+    state.todayDraft = generateSession(sessionType, genOpts);
     saveState();
   }
   const session = state.todayDraft;
@@ -1829,9 +1999,23 @@ function renderToday() {
     ${renderList(warmup)}
   `;
 
+  const tmplForToday = TEMPLATES[sessionType];
+  const strengthSlotForToday = (tmplForToday && tmplForToday.strength && tmplForToday.strength.slot) || null;
+  const strengthOptionsForToday = strengthSlotForToday
+    ? MOVEMENTS.filter(m => m.slot === strengthSlotForToday && isMovementUsable(m))
+    : [];
+  const wodOptionsForToday = (tmplForToday && tmplForToday.wods) || [];
+
   session.blocks.forEach((b) => {
     if (b.kind === 'strength') {
       const wtTxt = b.weight ? `<strong>${b.weight} kg</strong> (${b.pct}%)` : `${b.pct}%`;
+      const picker = (b.mid && strengthOptionsForToday.length > 1) ? `
+        <div style="margin-top:8px">
+          <label style="font-size:11px;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase">Swap strength piece</label>
+          <select id="strength-picker" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);font-size:14px">
+            ${strengthOptionsForToday.map(m => `<option value="${m.id}" ${m.id === b.mid ? 'selected' : ''}>${m.name}</option>`).join('')}
+          </select>
+        </div>` : '';
       html += `
         <div class="card">
           <div class="label">Strength</div>
@@ -1839,6 +2023,7 @@ function renderToday() {
           <div class="body">
             <div>${b.scheme}</div>
             <div style="margin-top:6px">Working weight: ${wtTxt}</div>
+            ${picker}
           </div>
         </div>`;
     } else if (b.kind === 'wod' || b.kind === 'finisher') {
@@ -1852,12 +2037,20 @@ function renderToday() {
         return `<li>${repsTxt}${it.name}${rxTxt}${scale}</li>`;
       };
       const labelText = b.kind === 'finisher' ? `🔥 Finisher · ${b.title}` : b.title;
+      const wodPicker = (b.kind === 'wod' && wodOptionsForToday.length > 1) ? `
+        <div style="margin-top:10px">
+          <label style="font-size:11px;color:var(--muted);letter-spacing:0.6px;text-transform:uppercase">Swap WOD</label>
+          <select id="wod-picker" style="width:100%;margin-top:4px;padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--fg);font-size:14px">
+            ${wodOptionsForToday.map((w, i) => `<option value="${i}" ${i === session.wodIdx ? 'selected' : ''}>${w.title}</option>`).join('')}
+          </select>
+        </div>` : '';
       html += `
         <div class="card">
           <div class="label">${labelText}</div>
           <div class="body">
             <ul>${b.items.map(renderItem).join('')}</ul>
             ${b.note ? `<div style="color:var(--muted);font-size:13px">${b.note}</div>` : ''}
+            ${wodPicker}
           </div>
         </div>`;
     } else if (b.kind === 'recovery') {
@@ -1927,7 +2120,13 @@ function renderToday() {
 
   document.getElementById('reroll').onclick = () => {
     const prev = state.todayDraft && typeof state.todayDraft.wodIdx === 'number' ? state.todayDraft.wodIdx : null;
-    state.todayDraft = generateSession(sessionType, prev !== null ? { avoidWodIdx: prev } : {});
+    const keepStrengthMid = (state.chosenForToday && state.chosenForToday.strengthMid) || null;
+    const genOpts = prev !== null ? { avoidWodIdx: prev } : {};
+    if (keepStrengthMid) genOpts.strengthMid = keepStrengthMid;
+    state.todayDraft = generateSession(sessionType, genOpts);
+    if (state.chosenForToday) {
+      state.chosenForToday = { ...state.chosenForToday, wodIndex: state.todayDraft.wodIdx };
+    }
     saveState();
     renderToday();
   };
@@ -1942,6 +2141,32 @@ function renderToday() {
     startPlayer(session);
   };
   document.getElementById('choose-pairing').onclick = () => setView('build');
+
+  const strengthPicker = document.getElementById('strength-picker');
+  if (strengthPicker) {
+    strengthPicker.onchange = (e) => {
+      const newMid = e.target.value;
+      const wIdx = (state.todayDraft && typeof state.todayDraft.wodIdx === 'number') ? state.todayDraft.wodIdx : 0;
+      state.chosenForToday = { sessionType, wodIndex: wIdx, strengthMid: newMid };
+      state.todayDraft = generateSession(sessionType, { wodIndex: wIdx, strengthMid: newMid });
+      saveState();
+      renderToday();
+    };
+  }
+  const wodPicker = document.getElementById('wod-picker');
+  if (wodPicker) {
+    wodPicker.onchange = (e) => {
+      const newIdx = parseInt(e.target.value, 10);
+      const sMid = state.todayDraft && state.todayDraft.strengthMid;
+      state.chosenForToday = { sessionType, wodIndex: newIdx, strengthMid: sMid || null };
+      const genOpts = { wodIndex: newIdx };
+      if (sMid) genOpts.strengthMid = sMid;
+      state.todayDraft = generateSession(sessionType, genOpts);
+      saveState();
+      renderToday();
+    };
+  }
+
   const refToggle = document.getElementById('ref-toggle');
   if (refToggle) {
     refToggle.onclick = () => {
