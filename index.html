@@ -801,13 +801,19 @@ const COOLDOWNS = {
 
 /* SESSION TYPES — independent of weekday. Order in the rotation is user-defined. */
 const SESSION_TYPES = [
-  { id: 'squat_legs',    label: 'Squat + Leg/Lung WOD',       short: 'Squat day' },
-  { id: 'gym_mixed',     label: 'Gymnastic + Mixed Modal',    short: 'Gym day' },
-  { id: 'bench_push',    label: 'Bench + Push WOD',           short: 'Bench day' },
-  { id: 'core_chipper',  label: 'Core + Long Cardio Chipper', short: 'Core / Chipper' },
-  { id: 'clean_triplet', label: 'Hang Clean + Short Triplet', short: 'Clean day' },
-  { id: 'long_workout',  label: 'Long Workout',               short: 'Long' },
-  { id: 'rest',          label: 'Active Recovery / Rest',     short: 'Rest' },
+  { id: 'squat_legs',     label: 'Squat + Leg/Lung WOD',       short: 'Squat day' },
+  { id: 'gym_mixed',      label: 'Gymnastic + Mixed Modal',    short: 'Gym day' },
+  { id: 'bench_push',     label: 'Bench + Push WOD',           short: 'Bench day' },
+  { id: 'core_chipper',   label: 'Core + Long Cardio Chipper', short: 'Core / Chipper' },
+  { id: 'clean_triplet',  label: 'Hang Clean + Short Triplet', short: 'Clean day' },
+  { id: 'long_workout',   label: 'Long Workout',               short: 'Long' },
+  // Split-style 45-min sessions: body-part strength + opposing/other high-intensity + core finisher
+  { id: 'split_legs',      label: 'Split — Legs (squat) + HIIT + Core',         short: 'Split Legs' },
+  { id: 'split_chest',     label: 'Split — Chest (bench) + HIIT + Core',        short: 'Split Chest' },
+  { id: 'split_back',      label: 'Split — Back (deadlift) + HIIT + Core',      short: 'Split Back' },
+  { id: 'split_shoulders', label: 'Split — Shoulders (press) + HIIT + Core',    short: 'Split Shoulders' },
+  { id: 'split_arms',      label: 'Split — Arms (pull/dip) + HIIT + Core',      short: 'Split Arms' },
+  { id: 'rest',           label: 'Active Recovery / Rest',     short: 'Rest' },
 ];
 
 const DEFAULT_ROTATION = ['squat_legs','gym_mixed','bench_push','core_chipper','clean_triplet','long_workout','rest'];
@@ -1028,6 +1034,147 @@ const TEMPLATES = {
     blocks: [
       { kind: 'recovery', title: '30–40 min easy', text: 'Easy walk, bike, or mobility flow. Pain-free range only.' },
     ],
+  },
+
+  /* ============================================================
+     SPLIT-STYLE SESSIONS (~45 min)
+     Each: body-part strength block + middle high-intensity WOD
+     (hitting opposing/other muscles) + core finisher.
+     ============================================================ */
+
+  split_legs: {
+    name: 'Split — Legs',
+    strength: { slot: 'strength_squat', scheme: '5 rounds: 5 reps @ {pct}%, 90 sec rest. Drive through heels, brace hard.' },
+    wods: [
+      { title: 'EMOM 15 min', slots: [
+          { slot: 'gym_pull', reps: 6 },
+          { slot: 'gym_push', reps: 6 },
+          { slot: 'cardio',   reps: 12 },
+        ], note: 'A/B/C, rotating each minute — upper-body focus, legs recover' },
+      { title: 'AMRAP 12 min', slots: [
+          { slot: 'gym_pull',     reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'cardio',       reps: 12 },
+        ] },
+      { title: '4 Rounds For Time (12 min cap)', slots: [
+          { slot: 'gym_pull', reps: 8 },
+          { slot: 'gym_push', reps: 8 },
+          { slot: 'cardio',   reps: 15 },
+        ] },
+    ],
+    finisher: { title: 'Core Finisher — 5 min', slots: [
+        { slot: 'core', reps: 30 },
+        { slot: 'core', reps: 20 },
+        { slot: 'core', reps: 15 },
+      ], note: '2 rounds — no rest between, breathe through' },
+  },
+
+  split_chest: {
+    name: 'Split — Chest',
+    strength: { slot: 'strength_bench', scheme: '5 rounds: 5 reps @ {pct}%, 90 sec rest. Pause 1 sec at chest.' },
+    wods: [
+      { title: 'EMOM 15 min', slots: [
+          { slot: 'gym_pull',     reps: 8 },
+          { slot: 'jump',         reps: 8 },
+          { slot: 'cardio',       reps: 12 },
+        ], note: 'A/B/C, rotating each minute' },
+      { title: '21-15-9 Reps (12 min cap)', slots: [
+          { slot: 'gym_pull' },
+          { slot: 'weighted_compound' },
+          { slot: 'cardio' },
+        ] },
+      { title: 'AMRAP 12 min', slots: [
+          { slot: 'gym_pull', reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',     reps: 10 },
+        ] },
+    ],
+    finisher: { title: 'Core Finisher — 5 min', slots: [
+        { slot: 'core', reps: 20 },
+        { slot: 'core', reps: 15 },
+        { slot: 'core', reps: 30 },
+      ], note: '2 rounds, breathe steady' },
+  },
+
+  split_back: {
+    name: 'Split — Back',
+    strength: { slot: 'strength_clean', scheme: '5 rounds: 3 Deadlift @ {pct}%, 2 min rest. (Use Hang Clean if you prefer.)' },
+    wods: [
+      { title: 'EMOM 15 min', slots: [
+          { slot: 'gym_push',     reps: 6 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'cardio',       reps: 12 },
+        ], note: 'A/B/C, rotating each minute' },
+      { title: '5 Rounds For Time (15 min cap)', slots: [
+          { slot: 'gym_push',     reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'cardio',       reps: 12 },
+        ] },
+      { title: 'AMRAP 12 min', slots: [
+          { slot: 'gym_push', reps: 8 },
+          { slot: 'jump',     reps: 10 },
+          { slot: 'cardio',   reps: 12 },
+        ] },
+    ],
+    finisher: { title: 'Core Finisher — 5 min', slots: [
+        { slot: 'core', reps: 20 },
+        { slot: 'core', reps: 30 },
+        { slot: 'core', reps: 15 },
+      ], note: '2 rounds — back-friendly: hollow rocks > sit-ups if low back is fried' },
+  },
+
+  split_shoulders: {
+    name: 'Split — Shoulders',
+    strength: { slot: 'strength_bench', scheme: '5 rounds: 5 Strict Press / Push Press @ {pct}% of push press, 90 sec rest.' },
+    wods: [
+      { title: 'EMOM 15 min', slots: [
+          { slot: 'gym_pull', reps: 6 },
+          { slot: 'jump',     reps: 10 },
+          { slot: 'cardio',   reps: 12 },
+        ], note: 'A/B/C, rotating each minute' },
+      { title: '4 Rounds For Time (14 min cap)', slots: [
+          { slot: 'gym_pull',          reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'cardio',            reps: 12 },
+        ] },
+      { title: 'AMRAP 12 min', slots: [
+          { slot: 'gym_pull', reps: 8 },
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',     reps: 10 },
+        ] },
+    ],
+    finisher: { title: 'Core Finisher — 5 min', slots: [
+        { slot: 'core', reps: 30 },
+        { slot: 'core', reps: 15 },
+        { slot: 'core', reps: 20 },
+      ], note: '2 rounds' },
+  },
+
+  split_arms: {
+    name: 'Split — Arms',
+    strength: { slot: null, scheme: '5 rounds: 5 Strict Pull-Ups + 5 Ring/Bar Dips, 90 sec rest. Scale to band-assist or jumping pull-up if needed.' },
+    wods: [
+      { title: 'EMOM 15 min', slots: [
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',         reps: 10 },
+          { slot: 'cardio',       reps: 12 },
+        ], note: 'A/B/C, rotating each minute — saves the arms' },
+      { title: '21-15-9 Reps (12 min cap)', slots: [
+          { slot: 'weighted_compound' },
+          { slot: 'jump' },
+          { slot: 'cardio' },
+        ] },
+      { title: 'AMRAP 12 min', slots: [
+          { slot: 'weighted_compound', reps: 10 },
+          { slot: 'jump',     reps: 10 },
+          { slot: 'cardio',   reps: 12 },
+        ] },
+    ],
+    finisher: { title: 'Core Finisher — 5 min', slots: [
+        { slot: 'core', reps: 20 },
+        { slot: 'core', reps: 30 },
+        { slot: 'core', reps: 15 },
+      ], note: '2 rounds — grip will be cooked, that\'s fine' },
   },
 };
 
@@ -1463,6 +1610,28 @@ function generateSession(sessionType, opts = {}) {
     blocks.push({ kind: 'wod', title: w.title, items, note: w.note || '' });
   }
 
+  // Optional core finisher (split sessions): same shape as a WOD, no timer
+  if (tmpl.finisher) {
+    const f = tmpl.finisher;
+    const fItems = [];
+    for (const sRaw of (f.slots || [])) {
+      const s = (typeof sRaw === 'string') ? { slot: sRaw } : sRaw;
+      if (s.slot === 'rest') { fItems.push({ name: 'Rest', isRest: true }); continue; }
+      let m = pickFromSlot(s.slot, used);
+      m = applyUserScale(m);
+      if (!m) { fItems.push({ name: '— (none available)' }); continue; }
+      const reps = (s.reps != null) ? repsLabel(m, s.reps, phase) : null;
+      const scale = pickScale(m);
+      fItems.push({
+        name: m.name, mid: m.id, rx: rxFor(m.id, phase), reps,
+        scaleName: scale ? scale.name : null,
+        scaleMid:  scale ? scale.id   : null,
+        scaleRx:   scale ? rxFor(scale.id, phase) : null,
+      });
+    }
+    blocks.push({ kind: 'finisher', title: f.title, items: fItems, note: f.note || '' });
+  }
+
   return {
     date: new Date().toISOString().slice(0, 10),
     sessionType,
@@ -1672,7 +1841,7 @@ function renderToday() {
             <div style="margin-top:6px">Working weight: ${wtTxt}</div>
           </div>
         </div>`;
-    } else if (b.kind === 'wod') {
+    } else if (b.kind === 'wod' || b.kind === 'finisher') {
       const renderItem = it => {
         if (it.isRest) return `<li><em style="color:var(--muted)">Rest</em></li>`;
         const repsTxt = it.reps ? `<strong>${it.reps}</strong> ` : '';
@@ -1682,9 +1851,10 @@ function renderToday() {
           : '';
         return `<li>${repsTxt}${it.name}${rxTxt}${scale}</li>`;
       };
+      const labelText = b.kind === 'finisher' ? `🔥 Finisher · ${b.title}` : b.title;
       html += `
         <div class="card">
-          <div class="label">${b.title}</div>
+          <div class="label">${labelText}</div>
           <div class="body">
             <ul>${b.items.map(renderItem).join('')}</ul>
             ${b.note ? `<div style="color:var(--muted);font-size:13px">${b.note}</div>` : ''}
@@ -2011,7 +2181,7 @@ function endPlayer() {
 
 function advancePlayerPhase() {
   if (!player) return;
-  const order = ['warmup','strength','wod','wod_done','cooldown','done'];
+  const order = ['warmup','strength','wod','wod_done','finisher','cooldown','done'];
   let idx = order.indexOf(player.phase);
   if (idx < 0) idx = 0;
   let next = idx + 1;
@@ -2019,6 +2189,7 @@ function advancePlayerPhase() {
     const p = order[next];
     if (p === 'strength' && !player.session.blocks.find(b => b.kind === 'strength')) { next++; continue; }
     if (p === 'wod' && !player.session.blocks.find(b => b.kind === 'wod')) { next++; continue; }
+    if (p === 'finisher' && !player.session.blocks.find(b => b.kind === 'finisher')) { next++; continue; }
     if (p === 'cooldown' && !COOLDOWNS[player.session.sessionType]) { next++; continue; }
     if (p === 'warmup' && !WARMUPS[player.session.sessionType]) { next++; continue; }
     break;
@@ -2133,6 +2304,7 @@ function renderPlayer() {
             : (phase === 'strength') ? 'Strength'
             : (phase === 'wod') ? 'WOD'
             : (phase === 'wod_done') ? 'WOD complete'
+            : (phase === 'finisher') ? 'Core Finisher'
             : (phase === 'cooldown') ? 'Cool-down' : '';
 
   let html = `
@@ -2190,9 +2362,25 @@ function renderPlayer() {
       </div>
     `;
   } else if (phase === 'wod_done') {
+    const hasFinisher = !!session.blocks.find(b => b.kind === 'finisher');
     html += `<div class="card"><div class="title">WOD complete</div>
       <div class="body">Final time: <strong>${fmtTime(player.wodElapsed)}</strong></div></div>`;
-    html += `<button class="btn" id="next-phase">Continue → cool-down</button>`;
+    html += `<button class="btn" id="next-phase">Continue → ${hasFinisher ? 'finisher' : 'cool-down'}</button>`;
+  } else if (phase === 'finisher') {
+    const fb = session.blocks.find(b => b.kind === 'finisher');
+    if (fb) {
+      html += `<div class="card"><div class="label">🔥 Finisher · ${fb.title}</div>
+        <div class="body">
+          <ul>${fb.items.map(it => {
+            if (it.isRest) return `<li><em style="color:var(--muted)">Rest</em></li>`;
+            const repsTxt = it.reps ? `<strong>${it.reps}</strong> ` : '';
+            const rxTxt = it.rx ? ` — <strong>${it.rx}</strong>` : '';
+            return `<li>${repsTxt}${it.name}${rxTxt}</li>`;
+          }).join('')}</ul>
+          ${fb.note ? `<div style="color:var(--muted);font-size:13px">${fb.note}</div>` : ''}
+        </div></div>`;
+    }
+    html += `<button class="btn" id="next-phase">Finisher done — cool-down →</button>`;
   } else if (phase === 'cooldown') {
     const c = COOLDOWNS[session.sessionType];
     if (c) html += `<div class="card"><div class="label">${c.title}</div>
